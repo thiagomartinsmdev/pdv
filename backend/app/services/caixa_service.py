@@ -7,10 +7,9 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import Conflito, RegraNegocio
-from app.models import FormaPagamento, Pagamento, SessaoCaixa, StatusVenda, Usuario, Venda
+from app.models import FormaPagamento, SessaoCaixa, Usuario, Venda
 from app.schemas.caixa import CaixaResposta, ResumoCaixa
-
-CENTAVO = Decimal("0.01")
+from app.services import totais
 
 
 def buscar_aberto(db: Session, usuario: Usuario, travar: bool = False) -> SessaoCaixa | None:
@@ -62,31 +61,15 @@ def fechar(db: Session, usuario: Usuario, valor_informado: Decimal) -> SessaoCai
 
 
 def calcular_resumo(db: Session, sessao: SessaoCaixa) -> ResumoCaixa:
-    vendas_concluidas = (Venda.sessao_caixa_id == sessao.id, Venda.status == StatusVenda.CONCLUIDA)
-
-    quantidade, total_vendido = db.execute(
-        select(func.count(Venda.id), func.coalesce(func.sum(Venda.total), 0)).where(
-            *vendas_concluidas
-        )
-    ).one()
-
-    # O que ficou no caixa em cada forma. Em dinheiro, o troco devolvido é descontado.
-    linhas = db.execute(
-        select(Pagamento.forma, func.sum(Pagamento.valor - Pagamento.troco))
-        .join(Venda)
-        .where(*vendas_concluidas)
-        .group_by(Pagamento.forma)
-    ).all()
-    recebido = dict(linhas)
-    total_por_forma = {
-        forma: Decimal(recebido.get(forma, 0)).quantize(CENTAVO) for forma in FormaPagamento
-    }
+    da_sessao = Venda.sessao_caixa_id == sessao.id
+    quantidade, total_vendido = totais.quantidade_e_total(db, da_sessao)
+    por_forma = totais.total_por_forma(db, da_sessao)
 
     return ResumoCaixa(
         quantidade_vendas=quantidade,
-        total_vendido=Decimal(total_vendido).quantize(CENTAVO),
-        total_por_forma=total_por_forma,
-        valor_esperado_dinheiro=sessao.valor_abertura + total_por_forma[FormaPagamento.DINHEIRO],
+        total_vendido=total_vendido,
+        total_por_forma=por_forma,
+        valor_esperado_dinheiro=sessao.valor_abertura + por_forma[FormaPagamento.DINHEIRO],
     )
 
 
