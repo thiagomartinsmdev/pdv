@@ -6,7 +6,7 @@ from sqlalchemy import text
 
 from app.core.deps import DbSession
 from app.core.exceptions import ErroAplicacao
-from app.routers import auth, produtos, usuarios
+from app.routers import auth, caixa, produtos, usuarios
 
 app = FastAPI(
     title="PDV API",
@@ -27,6 +27,7 @@ def tratar_erro_aplicacao(_request: Request, erro: ErroAplicacao) -> JSONRespons
 app.include_router(auth.router)
 app.include_router(usuarios.router)
 app.include_router(produtos.router)
+app.include_router(caixa.router)
 
 
 @app.get("/health", tags=["Saúde"])
