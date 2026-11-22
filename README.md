@@ -21,7 +21,13 @@ pip install -r requirements.txt
 copy .env.example .env
 ```
 
-Edite o `.env` com o usuário e a senha do seu PostgreSQL. Depois:
+Edite o `.env` com o usuário e a senha do seu PostgreSQL e gere uma chave para o JWT:
+
+```cmd
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+```
+
+Cole o resultado em `JWT_SECRET_KEY` no `.env`. Depois:
 
 ```cmd
 alembic upgrade head
@@ -29,7 +35,16 @@ python -m scripts.seed
 uvicorn app.main:app --reload
 ```
 
-A documentação interativa da API fica em http://localhost:8000/docs.
+A documentação interativa da API fica em http://localhost:8000/docs. Para testar rotas
+protegidas, faça `POST /auth/login`, copie o `access_token` e cole no botão **Authorize**.
+
+## Autenticação e perfis
+
+- Login com e-mail e senha devolve um token JWT (validade padrão: 8 horas).
+- O token é enviado no cabeçalho `Authorization: Bearer <token>`.
+- Perfis: **admin** (acesso total) e **operador** (opera o caixa).
+- O perfil e o status ativo são lidos do banco a cada requisição, então desativar um
+  usuário bloqueia o acesso na hora, mesmo que o token ainda não tenha expirado.
 
 ## Usuários de teste
 
