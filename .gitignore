@@ -1,0 +1,26 @@
+# ---------- Variáveis de ambiente (NUNCA versionar) ----------
+.env
+.env.*
+!.env.example
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ---------- Node / Frontend ----------
+node_modules/
+dist/
+*.local
+
+# ---------- Editores e sistema ----------
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

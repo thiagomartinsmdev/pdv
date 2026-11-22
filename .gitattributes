@@ -1,0 +1,4 @@
+# Padroniza as quebras de linha como LF no repositório (evita problemas no Docker/Linux).
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
