@@ -6,8 +6,8 @@ Sistema de ponto de venda (PDV) com controle de caixa, vendas, estoque e relató
 
 ## Tecnologias
 
-- **Backend:** Python, FastAPI, SQLAlchemy 2, PostgreSQL, Alembic
-- **Frontend:** React + Vite (em breve)
+- **Backend:** Python, FastAPI, SQLAlchemy 2, PostgreSQL, Alembic, JWT, bcrypt, pytest
+- **Frontend:** React 19, Vite, React Router, Axios
 
 ## Como rodar o backend (sem Docker)
 
@@ -37,6 +37,19 @@ uvicorn app.main:app --reload
 
 A documentação interativa da API fica em http://localhost:8000/docs. Para testar rotas
 protegidas, faça `POST /auth/login`, copie o `access_token` e cole no botão **Authorize**.
+
+## Como rodar o frontend
+
+Pré-requisito: Node.js 20+. Com a API rodando em outro terminal:
+
+```cmd
+cd frontend
+npm install
+npm run dev
+```
+
+Acesse http://localhost:5173. Se a API estiver em outro endereço, copie
+`frontend/.env.example` para `frontend/.env` e ajuste `VITE_API_URL`.
 
 ## Autenticação e perfis
 
