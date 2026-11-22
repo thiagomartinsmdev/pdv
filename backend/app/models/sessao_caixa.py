@@ -31,16 +31,12 @@ class SessaoCaixa(Base):
             postgresql_where=text("fechado_em IS NULL"),
         ),
         CheckConstraint("valor_abertura >= 0", name="valor_abertura_nao_negativo"),
-        CheckConstraint(
-            "valor_informado_fechamento >= 0", name="valor_fechamento_nao_negativo"
-        ),
+        CheckConstraint("valor_informado_fechamento >= 0", name="valor_fechamento_nao_negativo"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), index=True)
-    aberto_em: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    aberto_em: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     fechado_em: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     valor_abertura: Mapped[Decimal] = mapped_column(Dinheiro)
     valor_informado_fechamento: Mapped[Decimal | None] = mapped_column(Dinheiro)

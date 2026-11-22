@@ -6,12 +6,12 @@ from sqlalchemy import text
 
 from app.core.deps import DbSession
 from app.core.exceptions import ErroAplicacao
-from app.routers import auth, caixa, produtos, usuarios
+from app.routers import auth, caixa, produtos, usuarios, vendas
 
 app = FastAPI(
     title="PDV API",
     description="API de um sistema de ponto de venda para padaria/mercado.",
-    version="0.3.0",
+    version="0.4.0",
 )
 
 
@@ -28,6 +28,7 @@ app.include_router(auth.router)
 app.include_router(usuarios.router)
 app.include_router(produtos.router)
 app.include_router(caixa.router)
+app.include_router(vendas.router)
 
 
 @app.get("/health", tags=["Saúde"])

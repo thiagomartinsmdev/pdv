@@ -107,9 +107,7 @@ def upgrade() -> None:
         sa.CheckConstraint(
             "desconto >= 0 AND desconto <= subtotal", name=op.f("ck_vendas_desconto_valido")
         ),
-        sa.CheckConstraint(
-            "total = subtotal - desconto", name=op.f("ck_vendas_total_consistente")
-        ),
+        sa.CheckConstraint("total = subtotal - desconto", name=op.f("ck_vendas_total_consistente")),
     )
     op.create_index(op.f("ix_vendas_sessao_caixa_id"), "vendas", ["sessao_caixa_id"])
     op.create_index(op.f("ix_vendas_usuario_id"), "vendas", ["usuario_id"])

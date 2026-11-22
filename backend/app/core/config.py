@@ -24,5 +24,8 @@ class Settings(BaseSettings):
     jwt_algoritmo: str = "HS256"
     jwt_expira_minutos: int = Field(default=480, gt=0)
 
+    # Fuso usado para interpretar filtros por data (ex.: "vendas do dia 05/11").
+    fuso_horario: str = "America/Sao_Paulo"
+
 
 settings = Settings()

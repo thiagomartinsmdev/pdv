@@ -8,9 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 from app.schemas.tipos import ValorMonetario
 
 NomeProduto = Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
-CodigoBarras = Annotated[
-    str, StringConstraints(strip_whitespace=True, min_length=1, max_length=50)
-]
+CodigoBarras = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=50)]
 Estoque = Annotated[int, Field(ge=0)]
 
 

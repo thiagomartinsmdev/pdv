@@ -22,9 +22,7 @@ class Pagamento(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    venda_id: Mapped[int] = mapped_column(
-        ForeignKey("vendas.id", ondelete="CASCADE"), index=True
-    )
+    venda_id: Mapped[int] = mapped_column(ForeignKey("vendas.id", ondelete="CASCADE"), index=True)
     forma: Mapped[FormaPagamento] = mapped_column(enum_como_texto(FormaPagamento, "forma"))
     # Valor recebido nesta forma de pagamento (em dinheiro, inclui o que volta de troco).
     valor: Mapped[Decimal] = mapped_column(Dinheiro)

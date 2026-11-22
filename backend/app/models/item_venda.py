@@ -21,9 +21,7 @@ class ItemVenda(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    venda_id: Mapped[int] = mapped_column(
-        ForeignKey("vendas.id", ondelete="CASCADE"), index=True
-    )
+    venda_id: Mapped[int] = mapped_column(ForeignKey("vendas.id", ondelete="CASCADE"), index=True)
     produto_id: Mapped[int] = mapped_column(ForeignKey("produtos.id"), index=True)
     quantidade: Mapped[int]
     # Cópia do preço no momento da venda: se o preço do produto mudar depois,
