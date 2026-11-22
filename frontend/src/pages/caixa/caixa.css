@@ -1,0 +1,427 @@
+/* Estilos exclusivos das telas do caixa. */
+
+.caixa-centralizado {
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+/* ---------- Ponto de venda: duas colunas ---------- */
+
+.pdv {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.pdv__principal {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.pdv__leitor {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pdv__campo-codigo {
+  flex: 1;
+  min-width: 0;
+  min-height: 52px;
+  padding: 0 1rem;
+  border: 2px solid var(--cor-primaria);
+  border-radius: var(--raio);
+  font-family: var(--fonte-numeros);
+  font-size: 1.15rem;
+  background: var(--cor-superficie);
+}
+
+.pdv__campo-codigo:focus {
+  outline: 4px solid rgb(29 78 216 / 20%);
+}
+
+.pdv__leitor .btn {
+  min-height: 52px;
+}
+
+/* ---------- Lista de itens ---------- */
+
+.lista-itens {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  overflow-x: auto;
+}
+
+.lista-itens--vazia {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.lista-itens--vazia p {
+  margin: 0.25rem 0;
+}
+
+.tabela--itens .col-num {
+  width: 3rem;
+  color: var(--cor-texto-suave);
+}
+
+.tabela--itens .col-qtd {
+  width: 8.5rem;
+}
+
+.tabela--itens .col-valor {
+  text-align: right;
+  white-space: nowrap;
+  font-family: var(--fonte-numeros);
+}
+
+.tabela--itens .col-acoes {
+  width: 3rem;
+  text-align: right;
+}
+
+/* Destaca o último item bipado, que é o que o F4 remove. */
+.tabela--itens .linha--ultima td {
+  background: var(--cor-primaria-clara);
+}
+
+.item__nome {
+  font-weight: 600;
+}
+
+.item__codigo {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  font-family: var(--fonte-numeros);
+}
+
+.quantidade {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.quantidade span {
+  min-width: 2ch;
+  text-align: center;
+  font-weight: 700;
+  font-family: var(--fonte-numeros);
+}
+
+/* ---------- Resultados da busca por nome ---------- */
+
+.resultados-busca {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 0.75rem;
+}
+
+.resultados-busca ul {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.resultados-busca button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.75rem;
+  border: 0;
+  border-radius: var(--raio-pequeno);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.resultados-busca button:hover,
+.resultados-busca button:focus-visible {
+  background: var(--cor-primaria-clara);
+}
+
+/* ---------- Coluna lateral ---------- */
+
+.pdv__lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky;
+  top: 5rem;
+}
+
+.pdv__total {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  border-radius: var(--raio);
+  background: #0f172a;
+  color: #fff;
+}
+
+.pdv__total span {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.pdv__total strong {
+  font-family: var(--fonte-numeros);
+  font-size: 2.4rem;
+  line-height: 1.2;
+  word-break: break-all;
+}
+
+.pdv__total small {
+  opacity: 0.75;
+}
+
+.pdv__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pdv__ultima-venda {
+  padding: 1rem;
+  border-radius: var(--raio);
+  background: var(--cor-sucesso-clara);
+  border: 1px solid #bfe5cb;
+}
+
+.ultima-venda__linha {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--fonte-numeros);
+}
+
+.ultima-venda__troco strong {
+  font-size: 1.5rem;
+  color: var(--cor-sucesso);
+}
+
+.pdv__sessao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* ---------- Modal de pagamento ---------- */
+
+.pagamento {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 1.5rem;
+}
+
+.pagamento__lancamento {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pagamento__formas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.btn-forma {
+  min-height: 48px;
+  border: 2px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-superficie);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-forma--ativa {
+  border-color: var(--cor-primaria);
+  background: var(--cor-primaria-clara);
+  color: var(--cor-primaria);
+}
+
+.pagamento__valor {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.pagamento__valor .campo {
+  flex: 1;
+}
+
+.pagamento__valor .btn {
+  min-height: 44px;
+}
+
+.pagamento__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+}
+
+.pagamento__lista li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.pagamento__lista li:last-child {
+  border-bottom: 0;
+}
+
+.pagamento__lista span {
+  flex: 1;
+}
+
+.pagamento__lista strong {
+  font-family: var(--fonte-numeros);
+}
+
+.pagamento__resumo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.resumo-valores {
+  margin: 0;
+  padding: 1rem;
+  border-radius: var(--raio);
+  background: var(--cor-fundo);
+}
+
+.resumo-valores div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+}
+
+.resumo-valores dd {
+  margin: 0;
+  font-family: var(--fonte-numeros);
+}
+
+.resumo-valores__destaque {
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--cor-borda);
+  padding-bottom: 0.5rem !important;
+  margin-bottom: 0.25rem;
+}
+
+.resumo-valores__restante {
+  color: var(--cor-perigo);
+  font-weight: 700;
+}
+
+.resumo-valores__troco {
+  color: var(--cor-sucesso);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* ---------- Resultado do fechamento ---------- */
+
+.fechamento-situacao {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--raio-pequeno);
+  font-weight: 700;
+}
+
+.fechamento-situacao--ok {
+  background: var(--cor-sucesso-clara);
+  color: var(--cor-sucesso);
+}
+
+.fechamento-situacao--sobra {
+  background: var(--cor-aviso-clara);
+  color: var(--cor-aviso);
+}
+
+.fechamento-situacao--falta {
+  background: var(--cor-perigo-clara);
+  color: var(--cor-perigo);
+}
+
+.tabela-resumo {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.25rem;
+}
+
+.tabela-resumo th,
+.tabela-resumo td {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.tabela-resumo th {
+  text-align: left;
+  font-weight: 500;
+}
+
+.tabela-resumo td {
+  text-align: right;
+  font-family: var(--fonte-numeros);
+}
+
+.tabela-resumo__detalhe th {
+  padding-left: 1rem;
+  color: var(--cor-texto-suave);
+}
+
+.tabela-resumo__separador th,
+.tabela-resumo__separador td {
+  padding-top: 1rem;
+}
+
+.tabela-resumo__total th,
+.tabela-resumo__total td {
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-bottom: 0;
+}
+
+/* ---------- Telas menores ---------- */
+
+@media (max-width: 960px) {
+  .pdv {
+    grid-template-columns: 1fr;
+  }
+
+  /* No celular/tablet o total vem antes da lista, para ficar sempre visível. */
+  .pdv__lateral {
+    position: static;
+    order: -1;
+  }
+
+  .pagamento {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .pagamento__formas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pdv__total strong {
+    font-size: 2rem;
+  }
+}

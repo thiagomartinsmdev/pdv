@@ -4,6 +4,7 @@ import EmConstrucao from './components/EmConstrucao.jsx'
 import Layout from './components/Layout.jsx'
 import RotaProtegida from './components/RotaProtegida.jsx'
 import { useAuth } from './hooks/useAuth.js'
+import Caixa from './pages/caixa/Caixa.jsx'
 import Login from './pages/Login.jsx'
 import NaoEncontrada from './pages/NaoEncontrada.jsx'
 import { rotaInicial } from './utils/rotas.js'
@@ -26,7 +27,7 @@ export default function App() {
       <Route element={<RotaProtegida />}>
         <Route element={<Layout />}>
           <Route index element={<PaginaInicial />} />
-          <Route path="caixa" element={<EmConstrucao titulo="Caixa" etapa={7} />} />
+          <Route path="caixa" element={<Caixa />} />
 
           <Route path="admin" element={<RotaProtegida perfis={['admin']} />}>
             <Route index element={<Navigate to="relatorios" replace />} />

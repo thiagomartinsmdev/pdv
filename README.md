@@ -51,6 +51,31 @@ npm run dev
 Acesse http://localhost:5173. Se a API estiver em outro endereço, copie
 `frontend/.env.example` para `frontend/.env` e ajuste `VITE_API_URL`.
 
+Testes de unidade (Vitest) e linter (ESLint) do frontend:
+
+```cmd
+npm test
+npm run lint
+```
+
+## Tela de caixa
+
+O campo de código fica sempre com o foco, para funcionar com leitor de código de barras
+(que "digita" o código e aperta Enter).
+
+| Tecla / entrada   | Ação                                                  |
+|-------------------|-------------------------------------------------------|
+| `código` + Enter  | Adiciona 1 unidade do produto                         |
+| `5*código`        | Adiciona 5 unidades                                   |
+| `nome` + Enter    | Busca por nome (se houver vários, mostra uma lista)   |
+| **F2**            | Abre o pagamento / confirma a venda                   |
+| **F4**            | Remove o último item                                  |
+| **Esc**           | Cancela a venda em andamento (pede confirmação)       |
+
+No pagamento é possível combinar formas (ex.: parte no crédito, parte em dinheiro); o troco
+é calculado na hora e só existe em dinheiro. O fechamento do caixa é feito "às cegas": o
+operador informa o dinheiro contado antes de ver o valor esperado pelo sistema.
+
 ## Autenticação e perfis
 
 - Login com e-mail e senha devolve um token JWT (validade padrão: 8 horas).
