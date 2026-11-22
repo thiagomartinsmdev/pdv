@@ -1,9 +1,11 @@
 """Ponto de entrada da API."""
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
+from app.core.config import settings
 from app.core.deps import DbSession
 from app.core.exceptions import ErroAplicacao
 from app.routers import auth, caixa, produtos, relatorios, usuarios, vendas
@@ -11,7 +13,15 @@ from app.routers import auth, caixa, produtos, relatorios, usuarios, vendas
 app = FastAPI(
     title="PDV API",
     description="API de um sistema de ponto de venda para padaria/mercado.",
-    version="0.5.0",
+    version="0.6.0",
+)
+
+# Permite que o frontend (outra porta = outra "origem") chame a API pelo navegador.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origens,
+    allow_methods=["*"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 

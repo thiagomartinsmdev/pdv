@@ -27,5 +27,9 @@ class Settings(BaseSettings):
     # Fuso usado para interpretar filtros por data (ex.: "vendas do dia 05/11").
     fuso_horario: str = "America/Sao_Paulo"
 
+    # Endereços do frontend autorizados a chamar a API pelo navegador (CORS).
+    # No .env, use JSON: CORS_ORIGENS=["http://localhost:5173"]
+    cors_origens: list[str] = ["http://localhost:5173"]
+
 
 settings = Settings()
