@@ -46,6 +46,24 @@ protegidas, faça `POST /auth/login`, copie o `access_token` e cole no botão **
 - O perfil e o status ativo são lidos do banco a cada requisição, então desativar um
   usuário bloqueia o acesso na hora, mesmo que o token ainda não tenha expirado.
 
+## Testes
+
+Os testes usam um banco PostgreSQL separado, `pdv_test` (crie-o vazio no pgAdmin). Ele é
+apagado e recriado a cada execução, então nunca aponte os testes para o banco principal.
+Por segurança, o `conftest.py` se recusa a rodar se o nome do banco não terminar em `_test`.
+
+```cmd
+cd backend
+pip install -r requirements-dev.txt
+pytest -v
+```
+
+Por padrão os testes usam o mesmo servidor e senha do `DATABASE_URL`, trocando o banco por
+`pdv_test`. Para usar outro banco, defina `TEST_DATABASE_URL` no `.env`.
+
+Os testes rodam em PostgreSQL (e não em SQLite) porque as regras testadas dependem dele:
+`SELECT ... FOR UPDATE`, índice único parcial e CHECK constraints.
+
 ## Usuários de teste
 
 | Perfil   | E-mail           | Senha       |
