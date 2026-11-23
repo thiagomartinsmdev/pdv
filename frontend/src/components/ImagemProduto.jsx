@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { corDoNome, inicialDoNome } from '../utils/avatar.js'
+import { enderecoDaImagem } from '../utils/links.js'
 
 /**
  * Foto do produto ou, se não houver (ou se o link não carregar), a inicial do nome
@@ -20,7 +21,7 @@ export default function ImagemProduto({ nome, url, tamanho = 48, preencher = fal
     return (
       <span className="imagem-produto" style={estilo}>
         <img
-          src={url}
+          src={enderecoDaImagem(url)}
           alt=""
           loading="lazy"
           referrerPolicy="no-referrer"

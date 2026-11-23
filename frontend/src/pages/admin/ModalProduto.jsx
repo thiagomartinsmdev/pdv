@@ -8,7 +8,7 @@ import Modal from '../../components/Modal.jsx'
 import { useConsulta } from '../../hooks/useConsulta.js'
 import { centavosParaApi, centavosParaTexto, lerValorDigitado, paraCentavos } from '../../utils/dinheiro.js'
 import { mensagemDeErro } from '../../utils/erros.js'
-import { ehLinkDeImagemValido } from '../../utils/links.js'
+import { ehFotoDoServidor, ehLinkDeImagemValido } from '../../utils/links.js'
 
 /** Cadastro (produto = null) ou edição de um produto. */
 export default function ModalProduto({ produto, aoSalvar, aoFechar }) {
@@ -153,8 +153,9 @@ export default function ModalProduto({ produto, aoSalvar, aoFechar }) {
         <div className="campo-imagem">
           <label className="campo">
             <span>Link da imagem (opcional)</span>
+            {/* type="text": o navegador recusaria o caminho de uma foto do servidor num type="url". */}
             <input
-              type="url"
+              type="text"
               inputMode="url"
               value={campos.imagem_url}
               onChange={(e) => alterar('imagem_url', e.target.value)}
@@ -164,6 +165,11 @@ export default function ModalProduto({ produto, aoSalvar, aoFechar }) {
             />
             {linkInvalido && (
               <small className="campo__erro">O link deve começar com http:// ou https://.</small>
+            )}
+            {ehFotoDoServidor(link) && (
+              <small className="texto-suave texto-pequeno">
+                Foto guardada no servidor. Apague o campo para remover ou cole um link para trocar.
+              </small>
             )}
             {linkPrevia && linkComFalha === linkPrevia && (
               <small className="campo__aviso">

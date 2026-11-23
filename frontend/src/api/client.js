@@ -3,6 +3,8 @@
 // tratados em um lugar só, e não em cada tela.
 import axios from 'axios'
 
+import { URL_DA_API } from './endereco.js'
+
 const CHAVE_TOKEN = 'pdv:token'
 
 // O token fica no localStorage para sobreviver ao recarregar a página.
@@ -32,7 +34,7 @@ export const armazenamentoToken = {
 }
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8000',
+  baseURL: URL_DA_API,
   timeout: 15000,
 })
 
