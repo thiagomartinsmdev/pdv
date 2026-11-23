@@ -160,7 +160,7 @@ A tela de login tem atalhos para preencher esses usuários.
 
 ## Testes
 
-**Backend:** 49 testes com pytest num PostgreSQL de verdade.
+**Backend:** 72 testes com pytest num PostgreSQL de verdade.
 
 Crie um banco vazio `pdv_test` no mesmo servidor do `DATABASE_URL`. Ele é apagado e recriado a
 cada execução. Por segurança, o `conftest.py` se recusa a rodar se o nome do banco não
@@ -176,7 +176,8 @@ Para usar outro banco, defina `TEST_DATABASE_URL` no `backend\.env`.
 
 Cobertura: venda com sucesso, venda sem estoque (tudo ou nada), troco, pagamento insuficiente,
 PIX acima do total, cancelamento devolvendo estoque, operador tentando cancelar, fechamento de
-caixa, relatórios, filtros por fuso horário, CORS e venda simultânea do último item.
+caixa, relatórios, filtros por fuso horário, CORS, venda simultânea do último item,
+categorias, mais vendidos, migrations em dia com os models e seed.
 
 **Frontend:** 46 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento, as
 datas e o resumo de produtos do histórico.
@@ -197,7 +198,10 @@ faça `POST /auth/login`, copie o `access_token` e cole no botão **Authorize**.
 | POST | `/auth/login` | público | Login, devolve o token JWT |
 | GET | `/auth/me` | logado | Usuário dono do token |
 | GET / POST / PATCH | `/usuarios` | admin | Gestão de usuários (desativação em vez de exclusão) |
-| GET | `/produtos` | logado | Lista, com busca por nome ou código |
+| GET | `/categorias` | logado | Categorias na ordem das abas do caixa |
+| POST / PATCH / DELETE | `/categorias` | admin | Cadastro, edição e desativação |
+| GET | `/produtos` | logado | Lista, com busca por nome ou código e filtro `categoria_id` |
+| GET | `/produtos/mais-vendidos` | logado | Mais vendidos dos últimos `dias` (padrão: 30) |
 | GET | `/produtos/codigo/{codigo}` | logado | Busca pelo código de barras (leitor do caixa) |
 | POST / PATCH / DELETE | `/produtos` | admin | Cadastro, edição e desativação |
 | POST | `/caixa/abrir` | logado | Abre o caixa do usuário |

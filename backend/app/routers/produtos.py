@@ -22,12 +22,27 @@ def listar(
     usuario: UsuarioAtual,
     busca: Annotated[str | None, Query(description="Parte do nome ou código exato")] = None,
     incluir_inativos: Annotated[bool, Query(description="Só tem efeito para admin")] = False,
+    categoria_id: Annotated[int | None, Query(description="Só produtos desta categoria")] = None,
 ) -> list[Produto]:
     incluir_inativos = incluir_inativos and usuario.perfil == PerfilUsuario.ADMIN
-    return produto_service.listar(db, busca=busca, incluir_inativos=incluir_inativos)
+    return produto_service.listar(
+        db, busca=busca, incluir_inativos=incluir_inativos, categoria_id=categoria_id
+    )
 
 
-# Declarada antes de "/{produto_id}" para deixar a leitura da ordem das rotas clara.
+# As rotas com caminho fixo ficam ANTES de "/{produto_id}": senão o FastAPI tentaria
+# ler "mais-vendidos" como um id numérico e responderia 422.
+@router.get("/mais-vendidos", response_model=list[ProdutoResposta])
+def mais_vendidos(
+    db: DbSession,
+    _usuario: UsuarioAtual,
+    dias: Annotated[int, Query(ge=1, le=365, description="Janela de tempo, em dias")] = 30,
+    limite: Annotated[int, Query(ge=1, le=50)] = 12,
+) -> list[Produto]:
+    """Produtos ativos mais vendidos nos últimos dias (aba "Mais vendidos" do caixa)."""
+    return produto_service.mais_vendidos(db, dias=dias, limite=limite)
+
+
 @router.get("/codigo/{codigo_barras}", response_model=ProdutoResposta)
 def buscar_por_codigo(codigo_barras: str, db: DbSession, _usuario: UsuarioAtual) -> Produto:
     """Busca usada pelo leitor de código de barras do caixa (só produtos ativos)."""

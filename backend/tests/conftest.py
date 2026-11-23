@@ -26,7 +26,7 @@ from app.core.config import settings
 from app.core.database import Base, get_db
 from app.core.security import criar_token_acesso, gerar_hash_senha
 from app.main import app
-from app.models import PerfilUsuario, Produto, SessaoCaixa, Usuario
+from app.models import Categoria, PerfilUsuario, Produto, SessaoCaixa, Usuario
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 
@@ -142,16 +142,35 @@ def auth_operador(operador: Usuario) -> dict[str, str]:
 def criar_produto(db: Session) -> Callable[..., Produto]:
     contador = iter(range(1, 10_000))
 
-    def _criar(nome: str = "Produto", preco: str = "10.00", estoque: int = 10) -> Produto:
+    def _criar(
+        nome: str = "Produto",
+        preco: str = "10.00",
+        estoque: int = 10,
+        categoria: Categoria | None = None,
+        imagem_url: str | None = None,
+    ) -> Produto:
         produto = Produto(
             nome=nome,
             codigo_barras=f"789{next(contador):010d}",
             preco=Decimal(preco),
             quantidade_estoque=estoque,
+            categoria=categoria,
+            imagem_url=imagem_url,
         )
         db.add(produto)
         db.commit()
         return produto
+
+    return _criar
+
+
+@pytest.fixture
+def criar_categoria(db: Session) -> Callable[..., Categoria]:
+    def _criar(nome: str = "Pães", ordem: int = 0, ativo: bool = True) -> Categoria:
+        categoria = Categoria(nome=nome, ordem=ordem, ativo=ativo)
+        db.add(categoria)
+        db.commit()
+        return categoria
 
     return _criar
 
