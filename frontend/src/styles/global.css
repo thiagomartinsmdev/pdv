@@ -6,14 +6,21 @@
    ========================================================================= */
 
 :root {
-  /* ---------- Marca (vermelho) ----------
-     Texto branco sobre --cor-primaria: 6.47:1; sobre --cor-primaria-escura: 8.31:1.
-     --cor-primaria sobre --cor-primaria-clara (menu ativo): 5.91:1. */
-  --cor-primaria: #b91c1c;
-  --cor-primaria-escura: #991b1b;
-  --cor-primaria-mais-escura: #7f1d1d;
-  --cor-primaria-clara: #fef2f2;
-  --cor-primaria-borda: #fecaca;
+  /* ---------- Marca (laranja) ----------
+     O laranja #EA580C tem só 3.56:1 com texto branco (abaixo de 4.5:1), então:
+     - --cor-primaria (#EA580C): só elementos que NÃO são texto: bordas, foco,
+       ícones, barras e gráfico (3.56:1 sobre branco, acima do mínimo de 3:1);
+     - --cor-primaria-preenchida (#C2410C): fundo de botões com texto branco (5.18:1);
+     - --cor-primaria-texto (#C2410C): texto na cor da marca sobre branco (5.18:1);
+     - --cor-primaria-clara-texto (#9A3412) sobre --cor-primaria-clara: 6.88:1. */
+  --cor-primaria: #ea580c;
+  --cor-primaria-texto: #c2410c;
+  --cor-primaria-preenchida: #c2410c;
+  --cor-primaria-preenchida-hover: #9a3412; /* 7.31:1 com texto branco */
+  --cor-primaria-preenchida-ativa: #7c2d12;
+  --cor-primaria-clara: #fff7ed; /* destaque: menu ativo, última linha, pílulas */
+  --cor-primaria-clara-texto: #9a3412;
+  --cor-primaria-borda: #fed7aa;
 
   /* ---------- Neutros ---------- */
   --cor-superficie: #ffffff; /* cartões, modais, cabeçalho */
@@ -27,10 +34,11 @@
   --cor-texto-suave: #6b7280; /* 4.83:1 sobre branco */
 
   /* ---------- Estados ----------
-     Erro e ações destrutivas usam o mesmo vermelho da marca, por isso NUNCA
-     dependem só da cor: alertas têm ícone, fundo claro e texto escuro;
+     Vermelho é exclusivo de erros e ações destrutivas. Mesmo assim, nenhum estado
+     depende só da cor: alertas têm ícone, fundo claro, borda e texto escuro;
      botões destrutivos são contornados e têm ícone. */
-  --cor-perigo: #b91c1c;
+  --cor-perigo: #b91c1c; /* ícone e contorno: 5.91:1 sobre o fundo claro */
+  --cor-perigo-escura: #991b1b;
   --cor-perigo-clara: #fef2f2;
   --cor-perigo-borda: #fecaca;
   --cor-perigo-texto: #450a0a; /* 14.76:1 sobre o fundo claro */
@@ -40,14 +48,15 @@
   --cor-sucesso-borda: #bbf7d0;
   --cor-sucesso-texto: #166534; /* 6.81:1 sobre o fundo claro */
 
-  --cor-aviso: #b45309;
+  /* Aviso: amarelo (não âmbar/laranja), para não se confundir com a marca. */
+  --cor-aviso: #a16207; /* ícone: 4.75:1 sobre o fundo claro */
   --cor-aviso-clara: #fffbeb;
   --cor-aviso-borda: #fde68a;
-  --cor-aviso-texto: #92400e; /* 6.84:1 sobre o fundo claro */
+  --cor-aviso-texto: #713f12; /* 8.36:1 sobre o fundo claro */
 
   /* ---------- Gráficos ---------- */
-  --cor-grafico-serie: #b91c1c;
-  --cor-grafico-destaque: #dc2626;
+  --cor-grafico-serie: #ea580c; /* 3.56:1 sobre branco (validado) */
+  --cor-grafico-destaque: #c2410c; /* barra sob o mouse */
   --cor-grafico-trilho: #f3f4f6;
   --cor-grafico-grade: #e5e7eb;
   --cor-grafico-eixo: #d1d5db;
@@ -73,7 +82,7 @@
   --sombra-modal: 0 20px 48px rgb(17 24 39 / 18%);
   --altura-controle: 40px;
   --altura-controle-grande: 48px;
-  --anel-foco: 0 0 0 3px rgb(185 28 28 / 22%);
+  --anel-foco: 0 0 0 3px rgb(234 88 12 / 25%);
 
   /* ---------- Ícones (SVG embutido; recebem a cor via background-color) ---------- */
   --icone-erro: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7.5v5.5'/><path d='M12 16.5h.01'/></svg>");
@@ -118,11 +127,11 @@ select {
 }
 
 a {
-  color: var(--cor-primaria);
+  color: var(--cor-primaria-texto);
 }
 
 a:hover {
-  color: var(--cor-primaria-escura);
+  color: var(--cor-primaria-preenchida-hover);
 }
 
 .texto-suave {
@@ -208,18 +217,18 @@ a:hover {
   outline-offset: 2px;
 }
 
-/* Principal: a ação mais importante da tela (vermelho preenchido). */
+/* Principal: a ação mais importante da tela (cor da marca, preenchido). */
 .btn--primario {
-  background: var(--cor-primaria);
+  background: var(--cor-primaria-preenchida);
   color: #fff;
 }
 
 .btn--primario:hover:not(:disabled) {
-  background: var(--cor-primaria-escura);
+  background: var(--cor-primaria-preenchida-hover);
 }
 
 .btn--primario:active:not(:disabled) {
-  background: var(--cor-primaria-mais-escura);
+  background: var(--cor-primaria-preenchida-ativa);
 }
 
 /* Secundário: ações neutras (branco com contorno cinza). */
@@ -263,8 +272,8 @@ a:hover {
 
 .btn--perigo:hover:not(:disabled) {
   background: var(--cor-perigo-clara);
-  border-color: var(--cor-primaria-escura);
-  color: var(--cor-primaria-escura);
+  border-color: var(--cor-perigo-escura);
+  color: var(--cor-perigo-escura);
 }
 
 /* Sucesso: confirmações positivas. */
@@ -564,7 +573,7 @@ kbd {
 /* Perfis no cabeçalho */
 .badge--admin {
   background: var(--cor-primaria-clara);
-  color: var(--cor-primaria);
+  color: var(--cor-primaria-clara-texto);
 }
 
 .badge--operador {
@@ -701,7 +710,7 @@ kbd {
   gap: 0.6rem;
   font-size: var(--texto-lg);
   font-weight: 700;
-  color: var(--cor-primaria);
+  color: var(--cor-primaria-texto);
   white-space: nowrap;
 }
 
@@ -731,7 +740,7 @@ kbd {
 .menu-link--ativo,
 .menu-link--ativo:hover {
   background: var(--cor-primaria-clara);
-  color: var(--cor-primaria);
+  color: var(--cor-primaria-clara-texto);
 }
 
 .cabecalho__usuario {

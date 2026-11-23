@@ -93,7 +93,7 @@
 .chip--ativo:hover {
   border-color: var(--cor-primaria);
   background: var(--cor-primaria-clara);
-  color: var(--cor-primaria);
+  color: var(--cor-primaria-clara-texto);
 }
 
 /* ---------- Tabelas da área admin ---------- */
@@ -158,7 +158,7 @@
   padding: 0;
   border: 0;
   background: none;
-  color: var(--cor-primaria);
+  color: var(--cor-primaria-texto);
   font-weight: 700;
   cursor: pointer;
   text-decoration: underline;
@@ -338,13 +338,13 @@
 .barras-ranqueadas__trilho {
   height: 12px;
   border-radius: 0 4px 4px 0;
-  background: var(--cor-fundo);
+  background: var(--cor-grafico-trilho);
 }
 
 .barras-ranqueadas__barra {
   display: block;
   height: 100%;
-  background: #2a78d6;
+  background: var(--cor-grafico-serie);
   border-radius: 0 4px 4px 0; /* ponta arredondada, base reta */
 }
 
@@ -371,14 +371,14 @@
   height: 4px;
   margin-top: 0.35rem;
   border-radius: 999px;
-  background: #cde2fb;
+  background: var(--cor-grafico-trilho);
 }
 
 .barra-fina span {
   display: block;
   height: 100%;
   border-radius: 999px;
-  background: #2a78d6;
+  background: var(--cor-grafico-serie);
 }
 
 /* ---------- Telas menores ---------- */

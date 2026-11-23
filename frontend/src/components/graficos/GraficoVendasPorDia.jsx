@@ -3,7 +3,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 
 import { formatarData } from '../../utils/datas.js'
 import { formatarReais, paraCentavos } from '../../utils/dinheiro.js'
-import { CORES_GRAFICO } from './cores.js'
+import { coresDoGrafico } from './cores.js'
 
 const compacto = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -24,6 +24,7 @@ const inteiro = new Intl.NumberFormat('pt-BR', {
  */
 export default function GraficoVendasPorDia({ dias }) {
   const [verTabela, setVerTabela] = useState(false)
+  const cores = coresDoGrafico()
 
   // O Recharts trabalha com números; os centavos ficam guardados para o tooltip.
   const dados = dias.map((dia) => {
@@ -77,12 +78,12 @@ export default function GraficoVendasPorDia({ dias }) {
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={dados} margin={{ top: 8, right: 8, bottom: 0, left: 0 }} barCategoryGap="20%">
               {/* Grade só horizontal, fina e sólida: guia o olho sem competir com os dados. */}
-              <CartesianGrid vertical={false} stroke={CORES_GRAFICO.grade} />
+              <CartesianGrid vertical={false} stroke={cores.grade} />
               <XAxis
                 dataKey="rotulo"
                 tickLine={false}
-                axisLine={{ stroke: CORES_GRAFICO.eixo }}
-                tick={{ fill: CORES_GRAFICO.textoEixo, fontSize: 12 }}
+                axisLine={{ stroke: cores.eixo }}
+                tick={{ fill: cores.textoEixo, fontSize: 12 }}
                 interval="preserveStartEnd"
                 minTickGap={12}
               />
@@ -90,22 +91,22 @@ export default function GraficoVendasPorDia({ dias }) {
                 tickFormatter={formatarEixo}
                 tickLine={false}
                 axisLine={false}
-                tick={{ fill: CORES_GRAFICO.textoEixo, fontSize: 12 }}
+                tick={{ fill: cores.textoEixo, fontSize: 12 }}
                 width={76}
                 allowDecimals={false}
               />
               {/* O dia inteiro (a faixa toda) é a área de hover, não só a coluna. */}
               <Tooltip
-                cursor={{ fill: 'rgb(42 120 214 / 8%)' }}
+                cursor={{ fill: cores.faixaHover }}
                 content={<TooltipDia />}
                 isAnimationActive={false}
               />
               <Bar
                 dataKey="valor"
-                fill={CORES_GRAFICO.serie}
+                fill={cores.serie}
                 radius={[4, 4, 0, 0]} // ponta arredondada, base reta
                 maxBarSize={24}
-                activeBar={{ fill: CORES_GRAFICO.serieDestaque }}
+                activeBar={{ fill: cores.serieDestaque }}
                 isAnimationActive={false}
               />
             </BarChart>

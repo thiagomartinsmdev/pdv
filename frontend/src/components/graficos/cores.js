@@ -1,10 +1,20 @@
-// Cores dos gráficos. Uma única cor de série (os gráficos deste sistema mostram uma
-// série por vez), validada para contraste >= 3:1 sobre o fundo branco dos cartões.
-export const CORES_GRAFICO = {
-  serie: '#2a78d6',
-  serieDestaque: '#5598e7', // barra sob o mouse (um passo mais clara da mesma rampa)
-  trilho: '#cde2fb', // fundo das barras de proporção (passo claro da mesma rampa)
-  grade: '#e1e0d9',
-  eixo: '#c3c2b7',
-  textoEixo: '#6b6a65',
+// Cores dos gráficos.
+//
+// As cores são definidas UMA vez, como variáveis no :root do global.css. O Recharts
+// desenha em SVG e recebe as cores como valores prontos (não entende var(--...)),
+// então elas são lidas do CSS na hora de desenhar.
+
+function lerVariavel(nome) {
+  return getComputedStyle(document.documentElement).getPropertyValue(nome).trim()
+}
+
+export function coresDoGrafico() {
+  return {
+    serie: lerVariavel('--cor-grafico-serie'),
+    serieDestaque: lerVariavel('--cor-grafico-destaque'), // coluna sob o mouse
+    faixaHover: lerVariavel('--cor-primaria-clara'), // faixa do dia sob o mouse
+    grade: lerVariavel('--cor-grafico-grade'),
+    eixo: lerVariavel('--cor-grafico-eixo'),
+    textoEixo: lerVariavel('--cor-grafico-texto'),
+  }
 }
