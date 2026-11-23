@@ -91,7 +91,7 @@
 
 .chip--ativo,
 .chip--ativo:hover {
-  border-color: var(--cor-primaria);
+  border-color: var(--cor-primaria-contorno);
   background: var(--cor-primaria-clara);
   color: var(--cor-primaria-clara-texto);
 }

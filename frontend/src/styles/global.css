@@ -6,18 +6,22 @@
    ========================================================================= */
 
 :root {
-  /* ---------- Marca (laranja) ----------
-     O laranja #EA580C tem só 3.56:1 com texto branco (abaixo de 4.5:1), então:
-     - --cor-primaria (#EA580C): só elementos que NÃO são texto: bordas, foco,
-       ícones, barras e gráfico (3.56:1 sobre branco, acima do mínimo de 3:1);
-     - --cor-primaria-preenchida (#C2410C): fundo de botões com texto branco (5.18:1);
-     - --cor-primaria-texto (#C2410C): texto na cor da marca sobre branco (5.18:1);
+  /* ---------- Marca (laranja claro) ----------
+     Contrastes medidos (WCAG: 4.5:1 para texto, 3:1 para ícones e indicadores):
+     - --cor-primaria (#FB923C): preenchimento de botões e gráfico. Texto branco
+       sobre ela teria só 2.26:1, por isso o texto é --cor-texto-sobre-primaria
+       (#431407): 6.92:1 no normal e 5.58:1 no hover.
+     - #FB923C sobre branco também tem 2.26:1, então ele NÃO é usado como texto
+       nem como indicador. Para isso existem:
+       --cor-primaria-texto (#C2410C): logo, links e texto da marca (5.18:1);
+       --cor-primaria-contorno (#EA580C): foco, borda de selecionado e barra da
+       última linha (3.56:1 sobre branco, 3.35:1 sobre --cor-primaria-clara).
      - --cor-primaria-clara-texto (#9A3412) sobre --cor-primaria-clara: 6.88:1. */
-  --cor-primaria: #ea580c;
+  --cor-primaria: #fb923c;
+  --cor-primaria-hover: #f97316;
+  --cor-texto-sobre-primaria: #431407;
   --cor-primaria-texto: #c2410c;
-  --cor-primaria-preenchida: #c2410c;
-  --cor-primaria-preenchida-hover: #9a3412; /* 7.31:1 com texto branco */
-  --cor-primaria-preenchida-ativa: #7c2d12;
+  --cor-primaria-contorno: #ea580c;
   --cor-primaria-clara: #fff7ed; /* destaque: menu ativo, última linha, pílulas */
   --cor-primaria-clara-texto: #9a3412;
   --cor-primaria-borda: #fed7aa;
@@ -55,8 +59,10 @@
   --cor-aviso-texto: #713f12; /* 8.36:1 sobre o fundo claro */
 
   /* ---------- Gráficos ---------- */
-  --cor-grafico-serie: #ea580c; /* 3.56:1 sobre branco (validado) */
-  --cor-grafico-destaque: #c2410c; /* barra sob o mouse */
+  /* #FB923C tem 2.26:1 sobre branco: aceito no gráfico porque todo valor também
+     aparece como texto (tooltip, "Ver tabela" e números ao lado das barras). */
+  --cor-grafico-serie: #fb923c;
+  --cor-grafico-destaque: #ea580c; /* barra sob o mouse */
   --cor-grafico-trilho: #f3f4f6;
   --cor-grafico-grade: #e5e7eb;
   --cor-grafico-eixo: #d1d5db;
@@ -132,7 +138,7 @@ a {
 }
 
 a:hover {
-  color: var(--cor-primaria-preenchida-hover);
+  color: var(--cor-primaria-clara-texto); /* 7.31:1 sobre branco */
 }
 
 .texto-suave {
@@ -214,22 +220,21 @@ a:hover {
 .chip:focus-visible,
 .link-botao:focus-visible,
 .btn-forma:focus-visible {
-  outline: 2px solid var(--cor-primaria);
+  outline: 2px solid var(--cor-primaria-contorno);
   outline-offset: 2px;
 }
 
 /* Principal: a ação mais importante da tela (cor da marca, preenchido). */
 .btn--primario {
-  background: var(--cor-primaria-preenchida);
-  color: #fff;
+  background: var(--cor-primaria);
+  color: var(--cor-texto-sobre-primaria);
 }
 
-.btn--primario:hover:not(:disabled) {
-  background: var(--cor-primaria-preenchida-hover);
-}
-
+/* Pressionado usa o mesmo tom do hover: um laranja mais escuro (#EA580C) deixaria
+   o texto escuro com só 4.40:1, abaixo do mínimo. */
+.btn--primario:hover:not(:disabled),
 .btn--primario:active:not(:disabled) {
-  background: var(--cor-primaria-preenchida-ativa);
+  background: var(--cor-primaria-hover);
 }
 
 /* Secundário: ações neutras (branco com contorno cinza). */
@@ -275,16 +280,6 @@ a:hover {
   background: var(--cor-perigo-clara);
   border-color: var(--cor-perigo-escura);
   color: var(--cor-perigo-escura);
-}
-
-/* Sucesso: confirmações positivas. */
-.btn--sucesso {
-  background: var(--cor-sucesso);
-  color: #fff;
-}
-
-.btn--sucesso:hover:not(:disabled) {
-  background: var(--cor-sucesso-texto);
 }
 
 .btn--bloco {
@@ -371,7 +366,7 @@ kbd {
 .campo-busca:focus,
 .campo-inline select:focus,
 .filtro-periodo input[type='date']:focus {
-  border-color: var(--cor-primaria);
+  border-color: var(--cor-primaria-contorno);
   box-shadow: var(--anel-foco);
   outline: none;
 }
@@ -411,7 +406,7 @@ kbd {
 }
 
 .campo-dinheiro:focus-within {
-  border-color: var(--cor-primaria);
+  border-color: var(--cor-primaria-contorno);
   box-shadow: var(--anel-foco);
 }
 
@@ -673,7 +668,7 @@ kbd {
   width: 22px;
   height: 22px;
   border: 3px solid var(--cor-borda);
-  border-top-color: var(--cor-primaria);
+  border-top-color: var(--cor-primaria-contorno);
   border-radius: 50%;
   animation: girar 0.8s linear infinite;
 }
@@ -791,7 +786,7 @@ kbd {
   display: grid;
   place-items: center;
   padding: 1rem;
-  background: linear-gradient(160deg, #e8eefc 0%, var(--cor-fundo) 55%);
+  background: linear-gradient(160deg, var(--cor-primaria-clara) 0%, var(--cor-fundo) 55%);
 }
 
 .cartao--login {
