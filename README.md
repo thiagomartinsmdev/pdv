@@ -31,17 +31,32 @@ ao mesmo tempo) e os valores em dinheiro são sempre exatos.
 
 ## Telas
 
-| Login | Caixa |
-|---|---|
-| ![Tela de login](docs/prints/login.png) | ![Tela de caixa com itens](docs/prints/caixa.png) |
+Na ordem do uso: do login ao fechamento do caixa e, depois, a área do admin.
 
-| Pagamento com troco | Fechamento do caixa |
+| Login | Abrir caixa |
 |---|---|
-| ![Modal de pagamento](docs/prints/pagamento.png) | ![Resultado do fechamento](docs/prints/fechamento.png) |
+| ![Login](docs/prints/login.png) | ![Abrir caixa](docs/prints/abrir-caixa.png) |
+| Login com atalhos para os usuários de demonstração. | Abertura do caixa com o fundo de troco da gaveta. |
 
-| Relatórios | Histórico de vendas |
+| Caixa | Pagamento |
 |---|---|
-| ![Relatórios com gráficos](docs/prints/relatorios.png) | ![Histórico de vendas](docs/prints/vendas.png) |
+| ![Caixa](docs/prints/caixa.png) | ![Pagamento](docs/prints/pagamento.png) |
+| Venda em andamento: grade com fotos e abas por categoria, carrinho e total. | Pagamento em dinheiro com o troco calculado na hora. |
+
+| Fechamento | Resultado do fechamento |
+|---|---|
+| ![Fechamento](docs/prints/fechamento.png) | ![Resultado do fechamento](docs/prints/fechamento-resultado.png) |
+| Fechamento às cegas: o dinheiro é contado antes de ver o valor esperado. | Total por forma de pagamento, dinheiro esperado, contado e a diferença. |
+
+| Vendas | Relatórios |
+|---|---|
+| ![Vendas](docs/prints/vendas.png) | ![Relatórios](docs/prints/relatorios.png) |
+| Histórico por período, com os produtos de cada venda e as canceladas. | Total vendido, ticket médio, vendas por dia, pagamentos e mais vendidos. |
+
+| Produtos | Categorias |
+|---|---|
+| ![Produtos](docs/prints/produtos.png) | ![Categorias](docs/prints/categorias.png) |
+| Cadastro de produtos com foto, categoria, preço e estoque. | Categorias na ordem em que viram abas no caixa. |
 
 ## Tecnologias
 
