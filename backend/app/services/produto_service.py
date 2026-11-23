@@ -151,8 +151,13 @@ def atualizar(db: Session, produto_id: int, dados: ProdutoAtualizar) -> Produto:
     return produto
 
 
-def definir_imagem(db: Session, produto_id: int, conteudo: bytes) -> Produto:
+def definir_imagem(
+    db: Session, produto_id: int, conteudo: bytes, nome_base: str | None = None
+) -> Produto:
     """Grava a foto enviada e a associa ao produto, apagando a foto local anterior.
+
+    nome_base: nome do arquivo sem extensão (padrão: aleatório). O importador em lote
+    usa um hash do conteúdo, para a mesma foto não ser gravada duas vezes.
 
     Ordem pensada para nunca deixar o produto sem foto válida:
     1. valida e grava o arquivo novo;  2. salva no banco;  3. só então apaga o antigo.
@@ -160,7 +165,7 @@ def definir_imagem(db: Session, produto_id: int, conteudo: bytes) -> Produto:
     """
     produto = buscar(db, produto_id, travar=True)
     imagem_antiga = produto.imagem_url
-    url_nova, criou = imagem_service.salvar(conteudo)
+    url_nova, criou = imagem_service.salvar(conteudo, nome_base=nome_base)
     try:
         produto.imagem_url = url_nova
         db.commit()
