@@ -20,7 +20,10 @@ COPY . .
 
 # Roda como usuário comum, e não como root: se a aplicação for comprometida,
 # o invasor não tem poderes de administrador dentro do container.
-RUN useradd --create-home --uid 1000 app
+# A pasta das fotos é criada já pertencendo a esse usuário: o resto do /app é do root
+# (só leitura para a API), e sem isso a API não conseguiria gravar as fotos.
+# Ao ser criado vazio, o volume do docker-compose herda o dono e as permissões desta pasta.
+RUN useradd --create-home --uid 1000 app     && mkdir -p /app/uploads/produtos     && chown -R app:app /app/uploads
 USER app
 
 EXPOSE 8000

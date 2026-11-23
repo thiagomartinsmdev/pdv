@@ -42,9 +42,15 @@ services:
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Defina JWT_SECRET_KEY no arquivo .env da raiz do projeto}
       JWT_EXPIRA_MINUTOS: ${JWT_EXPIRA_MINUTOS:-480}
       FUSO_HORARIO: ${FUSO_HORARIO:-America/Sao_Paulo}
+      # Endereço do frontend (npm run dev) autorizado a chamar a API.
       CORS_ORIGENS: '["http://localhost:5173"]'
     ports:
       - "8000:8000"
+    volumes:
+      # Fotos dos produtos (backend/uploads fora do Docker). Ficam num volume para
+      # sobreviver a "docker compose up --build", que recria o container.
+      - pdv_uploads:/app/uploads
 
 volumes:
   pdv_dados:
+  pdv_uploads:
