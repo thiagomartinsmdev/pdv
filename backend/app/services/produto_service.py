@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.core.exceptions import Conflito, NaoEncontrado, RegraNegocio
 from app.models import Categoria, ItemVenda, Produto, StatusVenda, Venda
 from app.schemas.produto import ProdutoAtualizar, ProdutoCriar
+from app.services import imagem_service
 
 # Carrega a categoria de todos os produtos de uma lista com UMA consulta extra,
 # em vez de uma consulta por produto (problema N+1).
@@ -105,9 +106,17 @@ def _validar_categoria(db: Session, categoria_id: int | None) -> None:
         raise RegraNegocio(f"A categoria '{categoria.nome}' está desativada.")
 
 
+def _recusar_caminho_local_novo(url: str | None, atual: str | None = None) -> None:
+    """Fotos guardadas no servidor só entram pelo upload (ou pelos scripts). Pelo
+    formulário, um caminho /uploads/... só é aceito se for a foto que o produto já tem."""
+    if imagem_service.eh_local(url) and url != atual:
+        raise RegraNegocio("Para usar uma foto do computador, envie o arquivo pelo upload.")
+
+
 def criar(db: Session, dados: ProdutoCriar) -> Produto:
     _garantir_codigo_livre(db, dados.codigo_barras)
     _validar_categoria(db, dados.categoria_id)
+    _recusar_caminho_local_novo(dados.imagem_url)
     produto = Produto(**dados.model_dump())
     db.add(produto)
     db.commit()
@@ -127,11 +136,52 @@ def atualizar(db: Session, produto_id: int, dados: ProdutoAtualizar) -> Produto:
     # foi desativada pode continuar sendo editado sem precisar trocá-la.
     if "categoria_id" in alteracoes and alteracoes["categoria_id"] != produto.categoria_id:
         _validar_categoria(db, alteracoes["categoria_id"])
+    imagem_antiga = produto.imagem_url
+    if "imagem_url" in alteracoes:
+        _recusar_caminho_local_novo(alteracoes["imagem_url"], atual=imagem_antiga)
 
     for campo, valor in alteracoes.items():
         setattr(produto, campo, valor)
 
     db.commit()
+    # Trocou a foto do servidor por um link (ou removeu): o arquivo antigo é apagado.
+    if produto.imagem_url != imagem_antiga:
+        imagem_service.apagar_se_sem_uso(db, imagem_antiga)
+    db.refresh(produto)
+    return produto
+
+
+def definir_imagem(db: Session, produto_id: int, conteudo: bytes) -> Produto:
+    """Grava a foto enviada e a associa ao produto, apagando a foto local anterior.
+
+    Ordem pensada para nunca deixar o produto sem foto válida:
+    1. valida e grava o arquivo novo;  2. salva no banco;  3. só então apaga o antigo.
+    Se o passo 2 falhar, o arquivo novo é que é apagado.
+    """
+    produto = buscar(db, produto_id, travar=True)
+    imagem_antiga = produto.imagem_url
+    url_nova, criou = imagem_service.salvar(conteudo)
+    try:
+        produto.imagem_url = url_nova
+        db.commit()
+    except Exception:
+        db.rollback()
+        if criou:
+            imagem_service.apagar_arquivo(url_nova)
+        raise
+    if imagem_antiga != url_nova:
+        imagem_service.apagar_se_sem_uso(db, imagem_antiga)
+    db.refresh(produto)
+    return produto
+
+
+def remover_imagem(db: Session, produto_id: int) -> Produto:
+    """Tira a foto do produto (o caixa volta a mostrar a inicial) e apaga o arquivo local."""
+    produto = buscar(db, produto_id, travar=True)
+    imagem_antiga = produto.imagem_url
+    produto.imagem_url = None
+    db.commit()
+    imagem_service.apagar_se_sem_uso(db, imagem_antiga)
     db.refresh(produto)
     return produto
 

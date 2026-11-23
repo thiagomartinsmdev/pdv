@@ -36,6 +36,12 @@ class Conflito(ErroAplicacao):
     status_code = 409
 
 
+class ArquivoMuitoGrande(ErroAplicacao):
+    """O arquivo enviado passa do tamanho máximo permitido."""
+
+    status_code = 413
+
+
 class RegraNegocio(ErroAplicacao):
     """A requisição é válida, mas uma regra de negócio impede a ação."""
 

@@ -24,3 +24,6 @@ dist/
 .idea/
 Thumbs.db
 .DS_Store
+
+# ---------- Fotos enviadas e relatórios dos scripts (dados locais) ----------
+backend/uploads/

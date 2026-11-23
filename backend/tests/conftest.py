@@ -10,23 +10,31 @@
 """
 
 import os
+import shutil
+import tempfile
 from collections.abc import Callable, Generator
 from decimal import Decimal
 from pathlib import Path
 
-import pytest
-from alembic.config import Config
-from fastapi.testclient import TestClient
-from sqlalchemy import Engine, create_engine, text
-from sqlalchemy.engine import make_url
-from sqlalchemy.orm import Session, sessionmaker
+# Fotos enviadas nos testes vão para uma pasta temporária, nunca para backend/uploads.
+# Precisa vir ANTES de importar a aplicação, que lê a pasta ao ser carregada; por isso
+# os imports abaixo estão fora da ordem padrão (noqa: E402).
+PASTA_UPLOADS_TESTE = tempfile.mkdtemp(prefix="pdv_uploads_teste_")
+os.environ["UPLOADS_DIR"] = PASTA_UPLOADS_TESTE
 
-from alembic import command
-from app.core.config import settings
-from app.core.database import Base, get_db
-from app.core.security import criar_token_acesso, gerar_hash_senha
-from app.main import app
-from app.models import Categoria, PerfilUsuario, Produto, SessaoCaixa, Usuario
+import pytest  # noqa: E402
+from alembic.config import Config  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+from sqlalchemy import Engine, create_engine, text  # noqa: E402
+from sqlalchemy.engine import make_url  # noqa: E402
+from sqlalchemy.orm import Session, sessionmaker  # noqa: E402
+
+from alembic import command  # noqa: E402
+from app.core.config import settings  # noqa: E402
+from app.core.database import Base, get_db  # noqa: E402
+from app.core.security import criar_token_acesso, gerar_hash_senha  # noqa: E402
+from app.main import app  # noqa: E402
+from app.models import Categoria, PerfilUsuario, Produto, SessaoCaixa, Usuario  # noqa: E402
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 
@@ -58,6 +66,17 @@ def engine() -> Generator[Engine, None, None]:
         command.upgrade(config, "head")
     yield engine
     engine.dispose()
+
+
+@pytest.fixture(autouse=True)
+def limpar_uploads() -> Generator[None, None, None]:
+    """Esvazia a pasta temporária de uploads depois de cada teste."""
+    yield
+    for item in Path(PASTA_UPLOADS_TESTE).iterdir():
+        if item.is_dir():
+            shutil.rmtree(item)
+        else:
+            item.unlink()
 
 
 @pytest.fixture(scope="session")

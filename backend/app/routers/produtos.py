@@ -6,12 +6,12 @@ Cadastro, alteração e desativação: somente admin.
 
 from typing import Annotated
 
-from fastapi import APIRouter, Query, Response, status
+from fastapi import APIRouter, File, Query, Response, UploadFile, status
 
 from app.core.deps import AdminAtual, DbSession, UsuarioAtual
 from app.models import PerfilUsuario, Produto
 from app.schemas.produto import ProdutoAtualizar, ProdutoCriar, ProdutoResposta
-from app.services import produto_service
+from app.services import imagem_service, produto_service
 
 router = APIRouter(prefix="/produtos", tags=["Produtos"])
 
@@ -71,3 +71,25 @@ def desativar(produto_id: int, db: DbSession, _admin: AdminAtual) -> Response:
     """Desativa o produto (exclusão lógica). Para reativar, use PATCH com "ativo": true."""
     produto_service.desativar(db, produto_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+# ---------- Foto do produto (arquivo guardado no servidor) ----------
+
+
+@router.post("/{produto_id}/imagem", response_model=ProdutoResposta)
+def enviar_imagem(
+    produto_id: int,
+    db: DbSession,
+    _admin: AdminAtual,
+    arquivo: Annotated[UploadFile, File(description="JPG, PNG ou WebP de até 2 MB")],
+) -> Produto:
+    """Envia a foto do produto. O tipo é conferido pelo conteúdo do arquivo, não pela
+    extensão. A foto anterior guardada no servidor é apagada."""
+    conteudo = imagem_service.ler_com_limite(arquivo.file)
+    return produto_service.definir_imagem(db, produto_id, conteudo)
+
+
+@router.delete("/{produto_id}/imagem", response_model=ProdutoResposta)
+def remover_imagem(produto_id: int, db: DbSession, _admin: AdminAtual) -> Produto:
+    """Remove a foto do produto (e apaga o arquivo, se ele estiver no servidor)."""
+    return produto_service.remover_imagem(db, produto_id)

@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     # Fuso usado para interpretar filtros por data (ex.: "vendas do dia 05/11").
     fuso_horario: str = "America/Sao_Paulo"
 
+    # Pasta onde ficam as fotos enviadas (fora do Git). As fotos de produto vão para
+    # <uploads_dir>/produtos e são servidas em /uploads/produtos/...
+    uploads_dir: Path = BACKEND_DIR / "uploads"
+    tamanho_maximo_imagem: int = Field(default=2 * 1024 * 1024, gt=0)  # 2 MB
+
     # Endereços do frontend autorizados a chamar a API pelo navegador (CORS).
     # No .env, use JSON: CORS_ORIGENS=["http://localhost:5173"]
     cors_origens: list[str] = ["http://localhost:5173"]

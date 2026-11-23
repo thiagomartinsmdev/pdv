@@ -15,6 +15,7 @@ from pydantic import (
 
 from app.schemas.categoria import CategoriaResumo
 from app.schemas.tipos import ValorMonetario
+from app.services.imagem_service import eh_local
 
 NomeProduto = Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
 CodigoBarras = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=50)]
@@ -29,8 +30,14 @@ def _vazio_vira_none(valor: object) -> object:
 
 
 def _validar_url_imagem(url: str) -> str:
-    """Aceita só links http(s) com domínio. Isso impede, por exemplo, um link
-    "javascript:..." que seria executado ao ser colocado numa página."""
+    """Aceita links http(s) com domínio, ou o caminho de uma foto enviada ao servidor
+    (/uploads/produtos/...). Isso impede, por exemplo, um link "javascript:..." que
+    seria executado ao ser colocado numa página.
+
+    O caminho local é aceito para o formulário poder reenviar a foto atual sem mudança;
+    o service recusa trocar para OUTRO caminho local (fotos novas vêm pelo upload)."""
+    if eh_local(url):
+        return url
     partes = urlsplit(url)
     if partes.scheme not in ("http", "https") or not partes.netloc:
         raise ValueError("O link da imagem deve começar com http:// ou https://.")
