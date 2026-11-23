@@ -17,7 +17,9 @@ ao mesmo tempo) e os valores em dinheiro são sempre exatos.
 - Pagamento em dinheiro, PIX, débito e crédito, inclusive combinados, com troco calculado na hora
 
 **Administração (admin)**
-- Cadastro de produtos com busca, desativação e reativação
+- Cadastro de produtos com busca, categoria, foto (link com pré-visualização), desativação
+  e reativação
+- Categorias de produto, que viram as abas da grade do caixa, na ordem definida pelo admin
 - Histórico de vendas com filtro por período e status, produtos de cada venda, detalhes e
   cancelamento
 - Relatórios: total vendido, ticket médio, vendas por dia, formas de pagamento e produtos mais vendidos
@@ -179,8 +181,8 @@ PIX acima do total, cancelamento devolvendo estoque, operador tentando cancelar,
 caixa, relatórios, filtros por fuso horário, CORS, venda simultânea do último item,
 categorias, mais vendidos, migrations em dia com os models e seed.
 
-**Frontend:** 46 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento, as
-datas e o resumo de produtos do histórico.
+**Frontend:** 65 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento, as
+datas, o resumo de produtos do histórico, as iniciais dos produtos sem foto e os links de imagem.
 
 ```cmd
 cd frontend
