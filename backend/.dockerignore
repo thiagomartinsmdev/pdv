@@ -1,0 +1,20 @@
+# Arquivos que NÃO entram na imagem do Docker.
+
+# Segredos locais: a configuração do container vem do docker-compose.yml.
+.env
+.env.*
+!.env.example
+
+# Ambiente virtual e caches do Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Testes e ferramentas de desenvolvimento não são necessários para rodar a API
+tests/
+pytest.ini
+requirements-dev.txt

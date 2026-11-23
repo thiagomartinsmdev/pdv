@@ -1,0 +1,50 @@
+# Sobe o banco PostgreSQL e o backend com:  docker compose up -d --build
+# O frontend continua rodando fora do Docker (cd frontend && npm run dev).
+#
+# As variáveis ${...} vêm do arquivo .env da RAIZ do projeto (copie o .env.example).
+
+name: pdv
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pdv}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pdv}
+      POSTGRES_DB: ${POSTGRES_DB:-pdv}
+    ports:
+      # Porta 5433 no seu computador, para não conflitar com um PostgreSQL local na 5432.
+      # (No pgAdmin: host localhost, porta 5433.)
+      - "5433:5432"
+    volumes:
+      # Volume nomeado: os dados sobrevivem a "docker compose down" e a reinícios.
+      - pdv_dados:/var/lib/postgresql/data
+    healthcheck:
+      # "$$" escapa o "$" para a variável ser lida DENTRO do container.
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        # Só sobe o backend quando o banco já aceita conexões (healthcheck acima),
+        # senão as migrations falhariam por tentar conectar cedo demais.
+        condition: service_healthy
+    environment:
+      # Dentro da rede do Docker, o banco é acessado pelo nome do serviço ("db") na porta 5432.
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-pdv}:${POSTGRES_PASSWORD:-pdv}@db:5432/${POSTGRES_DB:-pdv}
+      # Obrigatória: o compose para com esta mensagem se ela não estiver no .env.
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Defina JWT_SECRET_KEY no arquivo .env da raiz do projeto}
+      JWT_EXPIRA_MINUTOS: ${JWT_EXPIRA_MINUTOS:-480}
+      FUSO_HORARIO: ${FUSO_HORARIO:-America/Sao_Paulo}
+      CORS_ORIGENS: '["http://localhost:5173"]'
+    ports:
+      - "8000:8000"
+
+volumes:
+  pdv_dados:
