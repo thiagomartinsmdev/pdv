@@ -27,3 +27,6 @@ Thumbs.db
 
 # ---------- Fotos enviadas e relatórios dos scripts (dados locais) ----------
 backend/uploads/
+
+# ---------- Configuração local do Claude Code ----------
+.claude/
