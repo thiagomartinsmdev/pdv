@@ -13,6 +13,8 @@ ao mesmo tempo) e os valores em dinheiro são sempre exatos.
 **Caixa (operador e admin)**
 - Abertura com fundo de troco e fechamento "às cegas", com o valor esperado e a diferença
 - Leitura por código de barras com o campo sempre em foco, quantidade com `5*código` e busca por nome
+- Grade de produtos com foto, abas por categoria e "Mais vendidos" (últimos 30 dias): um toque
+  adiciona 1 unidade; letras digitadas no campo de código filtram a grade
 - Atalhos de teclado: **F2** finaliza, **F4** remove o último item, **Esc** cancela a venda
 - Pagamento em dinheiro, PIX, débito e crédito, inclusive combinados, com troco calculado na hora
 
@@ -181,8 +183,9 @@ PIX acima do total, cancelamento devolvendo estoque, operador tentando cancelar,
 caixa, relatórios, filtros por fuso horário, CORS, venda simultânea do último item,
 categorias, mais vendidos, migrations em dia com os models e seed.
 
-**Frontend:** 65 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento, as
-datas, o resumo de produtos do histórico, as iniciais dos produtos sem foto e os links de imagem.
+**Frontend:** 82 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento, as
+datas, o resumo de produtos do histórico, as iniciais dos produtos sem foto, os links de imagem
+e a grade de produtos do caixa.
 
 ```cmd
 cd frontend

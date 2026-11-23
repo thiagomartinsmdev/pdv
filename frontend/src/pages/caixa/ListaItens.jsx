@@ -1,7 +1,10 @@
 import { formatarReais, paraCentavos } from '../../utils/dinheiro.js'
 import { subtotalDoItem } from './carrinho.js'
 
-/** Tabela com os itens da venda em andamento. */
+/**
+ * Carrinho da venda em andamento, em linhas compactas (cabe na coluna da direita).
+ * O último item (o que o F4 remove) fica destacado.
+ */
 export default function ListaItens({ itens, aoAlterarQuantidade, aoRemover }) {
   if (itens.length === 0) {
     return (
@@ -9,77 +12,61 @@ export default function ListaItens({ itens, aoAlterarQuantidade, aoRemover }) {
         <span className="lista-itens__icone" aria-hidden="true" />
         <p className="lista-itens__titulo">Bipe o primeiro produto</p>
         <p className="texto-suave">
-          Use o leitor de código de barras ou digite o código ou o nome do produto.
+          Use o leitor, digite o código ou o nome, ou toque num produto da grade.
         </p>
       </div>
     )
   }
 
   return (
-    <div className="lista-itens">
-      <table className="tabela tabela--itens">
-        <thead>
-          <tr>
-            <th className="col-num">#</th>
-            <th>Produto</th>
-            <th className="col-qtd">Qtd.</th>
-            <th className="col-valor col-unitario">Unitário</th>
-            <th className="col-valor">Subtotal</th>
-            <th className="col-acoes">
-              <span className="sr-only">Ações</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* "key" ajuda o React a saber qual linha mudou entre uma renderização e outra. */}
-          {itens.map((item, indice) => (
-            <tr key={item.produto.id} className={indice === itens.length - 1 ? 'linha--ultima' : ''}>
-              <td className="col-num">{indice + 1}</td>
-              <td>
-                <div className="item__nome">{item.produto.nome}</div>
-                <div className="item__codigo">{item.produto.codigo_barras}</div>
-              </td>
-              <td className="col-qtd">
-                <div className="quantidade">
-                  <button
-                    type="button"
-                    className="btn btn--secundario btn--icone"
-                    onClick={() => aoAlterarQuantidade(item, item.quantidade - 1)}
-                    aria-label={`Diminuir ${item.produto.nome}`}
-                  >
-                    −
-                  </button>
-                  <span>{item.quantidade}</span>
-                  <button
-                    type="button"
-                    className="btn btn--secundario btn--icone"
-                    onClick={() => aoAlterarQuantidade(item, item.quantidade + 1)}
-                    aria-label={`Aumentar ${item.produto.nome}`}
-                  >
-                    +
-                  </button>
-                </div>
-              </td>
-              <td className="col-valor col-unitario">
-                {formatarReais(paraCentavos(item.produto.preco))}
-              </td>
-              <td className="col-valor">
-                <strong>{formatarReais(subtotalDoItem(item))}</strong>
-              </td>
-              <td className="col-acoes">
-                <button
-                  type="button"
-                  className="btn btn--fantasma btn--icone"
-                  onClick={() => aoRemover(item)}
-                  aria-label={`Remover ${item.produto.nome}`}
-                >
-                  ✕
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ol className="lista-itens" aria-label="Itens da venda">
+      {/* "key" ajuda o React a saber qual linha mudou entre uma renderização e outra. */}
+      {itens.map((item, indice) => (
+        <li
+          key={item.produto.id}
+          className={`item-carrinho${indice === itens.length - 1 ? ' item-carrinho--ultimo' : ''}`}
+        >
+          <div className="item-carrinho__info">
+            <span className="item-carrinho__nome">{item.produto.nome}</span>
+            <span className="item-carrinho__unitario">
+              {formatarReais(paraCentavos(item.produto.preco))} un.
+            </span>
+          </div>
+
+          <div className="item-carrinho__controles">
+            <div className="quantidade">
+              <button
+                type="button"
+                className="btn btn--secundario btn--icone"
+                onClick={() => aoAlterarQuantidade(item, item.quantidade - 1)}
+                aria-label={`Diminuir ${item.produto.nome}`}
+              >
+                −
+              </button>
+              <span>{item.quantidade}</span>
+              <button
+                type="button"
+                className="btn btn--secundario btn--icone"
+                onClick={() => aoAlterarQuantidade(item, item.quantidade + 1)}
+                aria-label={`Aumentar ${item.produto.nome}`}
+              >
+                +
+              </button>
+            </div>
+            <strong className="item-carrinho__subtotal">
+              {formatarReais(subtotalDoItem(item))}
+            </strong>
+            <button
+              type="button"
+              className="btn btn--fantasma btn--icone"
+              onClick={() => aoRemover(item)}
+              aria-label={`Remover ${item.produto.nome}`}
+            >
+              ✕
+            </button>
+          </div>
+        </li>
+      ))}
+    </ol>
   )
 }

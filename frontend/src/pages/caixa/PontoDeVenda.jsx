@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 
-import { buscarPorCodigo, listarProdutos } from '../../api/produtos.js'
+import { listarCategorias } from '../../api/categorias.js'
+import { buscarPorCodigo, listarMaisVendidos, listarProdutos } from '../../api/produtos.js'
 import { registrarVenda } from '../../api/vendas.js'
 import Modal from '../../components/Modal.jsx'
 import { useAtalhos } from '../../hooks/useAtalhos.js'
+import { useConsulta } from '../../hooks/useConsulta.js'
 import { centavosParaApi, formatarReais, paraCentavos } from '../../utils/dinheiro.js'
 import { formatarDataHora } from '../../utils/datas.js'
 import { mensagemDeErro } from '../../utils/erros.js'
@@ -15,15 +17,19 @@ import {
   quantidadeNoCarrinho,
   totalDoCarrinho,
 } from './carrinho.js'
+import { termoDeFiltro } from './catalogo.js'
+import GradeProdutos from './GradeProdutos.jsx'
 import ListaItens from './ListaItens.jsx'
 import ModalPagamento from './ModalPagamento.jsx'
 
 /**
- * Tela principal do caixa: leitura de produtos, lista de itens, total e pagamento.
+ * Tela principal do caixa: à esquerda, o campo de código e a grade de produtos;
+ * à direita, o carrinho, o total e as ações.
  *
  * Atalhos: F2 finaliza, F4 remove o último item, Esc cancela a venda em andamento.
  * O campo de código fica sempre com o foco, para o leitor de código de barras
- * (que "digita" o código e aperta Enter) funcionar a qualquer momento.
+ * (que "digita" o código e aperta Enter) funcionar a qualquer momento. Letras
+ * digitadas nele também filtram a grade; números (bipe) não filtram.
  */
 export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
   // useReducer: como o useState, mas as mudanças passam por uma função (o reducer)
@@ -40,6 +46,15 @@ export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
 
   const { itens } = carrinho
   const total = totalDoCarrinho(itens)
+
+  // Produtos, categorias e mais vendidos da grade, carregados juntos.
+  const catalogo = useConsulta(
+    () => Promise.all([listarProdutos(), listarCategorias(), listarMaisVendidos({ dias: 30 })]),
+    [],
+  )
+  const [produtos, categorias, maisVendidos] = catalogo.dados ?? [[], [], []]
+  const filtro = termoDeFiltro(entrada)
+  const quantidades = new Map(itens.map((item) => [item.produto.id, item.quantidade]))
 
   const focarCampo = useCallback(() => campoRef.current?.focus(), [])
 
@@ -92,6 +107,12 @@ export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
       setBuscando(false)
       focarCampo()
     }
+  }
+
+  // Clique/toque num cartão da grade: 1 unidade, com a mesma regra de estoque do leitor.
+  function escolherDaGrade(produto) {
+    adicionar(produto, 1)
+    focarCampo()
   }
 
   function alterarQuantidade(item, quantidade) {
@@ -154,6 +175,7 @@ export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
     despachar({ tipo: 'limpar' })
     setErro('')
     setModal(null)
+    catalogo.recarregar() // atualiza o estoque e os mais vendidos na grade
   }
 
   function aoClicarFecharCaixa() {
@@ -224,19 +246,31 @@ export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
           </div>
         )}
 
-        <ListaItens itens={itens} aoAlterarQuantidade={alterarQuantidade} aoRemover={remover} />
+        <GradeProdutos
+          produtos={produtos}
+          categorias={categorias}
+          maisVendidos={maisVendidos}
+          filtro={filtro}
+          quantidades={quantidades}
+          carregando={catalogo.carregando}
+          erro={catalogo.erro}
+          aoEscolher={escolherDaGrade}
+          aoTentarDeNovo={catalogo.recarregar}
+        />
       </section>
 
       <aside className="pdv__lateral">
-        <div className="pdv__total">
-          <span>Total</span>
-          <strong>{formatarReais(total)}</strong>
-          <small>
-            {itens.length} item(ns) · {quantidadeDeUnidades(itens)} unidade(s)
-          </small>
-        </div>
+        <ListaItens itens={itens} aoAlterarQuantidade={alterarQuantidade} aoRemover={remover} />
 
-        <div className="pdv__acoes">
+        {/* Total + Finalizar: em telas pequenas vira uma barra fixa no rodapé. */}
+        <div className="pdv__fechamento">
+          <div className="pdv__total">
+            <span>Total</span>
+            <strong>{formatarReais(total)}</strong>
+            <small>
+              {itens.length} item(ns) · {quantidadeDeUnidades(itens)} unidade(s)
+            </small>
+          </div>
           <button
             type="button"
             className="btn btn--primario btn--grande btn--bloco pdv__finalizar"
@@ -244,20 +278,23 @@ export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
           >
             Finalizar venda <kbd>F2</kbd>
           </button>
+        </div>
+
+        <div className="pdv__acoes">
           <button
             type="button"
-            className="btn btn--secundario btn--grande btn--bloco"
+            className="btn btn--secundario btn--bloco"
             onClick={() => {
               removerUltimo()
               focarCampo()
             }}
             disabled={itens.length === 0}
           >
-            Remover último item <kbd>F4</kbd>
+            Remover último <kbd>F4</kbd>
           </button>
           <button
             type="button"
-            className="btn btn--perigo btn--grande btn--bloco"
+            className="btn btn--perigo btn--bloco"
             onClick={pedirCancelamento}
             disabled={itens.length === 0}
           >

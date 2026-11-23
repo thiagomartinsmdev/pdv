@@ -26,3 +26,9 @@ export async function atualizarProduto(id, dados) {
 export async function desativarProduto(id) {
   await api.delete(`/produtos/${id}`)
 }
+
+/** params: { dias, limite } — mais vendidos dos últimos dias (aba do caixa). */
+export async function listarMaisVendidos(params = {}) {
+  const { data } = await api.get('/produtos/mais-vendidos', { params })
+  return data
+}

@@ -7,10 +7,10 @@ import { useAtraso } from '../../hooks/useAtraso.js'
 import { useConsulta } from '../../hooks/useConsulta.js'
 import { formatarReais, paraCentavos } from '../../utils/dinheiro.js'
 import { mensagemDeErro } from '../../utils/erros.js'
+import { ESTOQUE_BAIXO } from '../../utils/estoque.js'
 import ModalProduto from './ModalProduto.jsx'
 import './admin.css'
 
-const ESTOQUE_BAIXO = 10
 
 export default function Produtos() {
   const [busca, setBusca] = useState('')
