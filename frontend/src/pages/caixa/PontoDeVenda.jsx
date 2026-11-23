@@ -188,7 +188,7 @@ export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
             autoComplete="off"
             autoFocus
           />
-          <button type="submit" className="btn btn--primario">
+          <button type="submit" className="btn btn--primario btn--grande">
             {buscando ? 'Buscando...' : 'Adicionar'}
           </button>
         </form>
@@ -239,14 +239,14 @@ export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
         <div className="pdv__acoes">
           <button
             type="button"
-            className="btn btn--sucesso btn--grande btn--bloco"
+            className="btn btn--primario btn--grande btn--bloco pdv__finalizar"
             onClick={abrirPagamento}
           >
             Finalizar venda <kbd>F2</kbd>
           </button>
           <button
             type="button"
-            className="btn btn--secundario btn--bloco"
+            className="btn btn--secundario btn--grande btn--bloco"
             onClick={() => {
               removerUltimo()
               focarCampo()
@@ -257,7 +257,7 @@ export default function PontoDeVenda({ sessao, aoFecharCaixa }) {
           </button>
           <button
             type="button"
-            className="btn btn--secundario btn--bloco"
+            className="btn btn--perigo btn--grande btn--bloco"
             onClick={pedirCancelamento}
             disabled={itens.length === 0}
           >

@@ -6,9 +6,10 @@ export default function ListaItens({ itens, aoAlterarQuantidade, aoRemover }) {
   if (itens.length === 0) {
     return (
       <div className="lista-itens lista-itens--vazia">
-        <p>Nenhum item na venda.</p>
+        <span className="lista-itens__icone" aria-hidden="true" />
+        <p className="lista-itens__titulo">Bipe o primeiro produto</p>
         <p className="texto-suave">
-          Passe o código de barras no leitor ou digite o código ou o nome do produto.
+          Use o leitor de código de barras ou digite o código ou o nome do produto.
         </p>
       </div>
     )
@@ -22,7 +23,7 @@ export default function ListaItens({ itens, aoAlterarQuantidade, aoRemover }) {
             <th className="col-num">#</th>
             <th>Produto</th>
             <th className="col-qtd">Qtd.</th>
-            <th className="col-valor">Unitário</th>
+            <th className="col-valor col-unitario">Unitário</th>
             <th className="col-valor">Subtotal</th>
             <th className="col-acoes">
               <span className="sr-only">Ações</span>
@@ -59,7 +60,9 @@ export default function ListaItens({ itens, aoAlterarQuantidade, aoRemover }) {
                   </button>
                 </div>
               </td>
-              <td className="col-valor">{formatarReais(paraCentavos(item.produto.preco))}</td>
+              <td className="col-valor col-unitario">
+                {formatarReais(paraCentavos(item.produto.preco))}
+              </td>
               <td className="col-valor">
                 <strong>{formatarReais(subtotalDoItem(item))}</strong>
               </td>

@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from 'react-router'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 
 import { useAuth } from '../hooks/useAuth.js'
 
@@ -14,6 +14,8 @@ const LINKS = [
 export default function Layout() {
   const { usuario, sair } = useAuth()
   const navigate = useNavigate()
+  // A tela do caixa usa a janela inteira (largura e altura) e um cabeçalho mais fino.
+  const telaCheia = useLocation().pathname.startsWith('/caixa')
 
   function aoSair() {
     sair()
@@ -23,7 +25,7 @@ export default function Layout() {
   const linksVisiveis = LINKS.filter((link) => link.perfis.includes(usuario.perfil))
 
   return (
-    <div className="layout">
+    <div className={`layout${telaCheia ? ' layout--tela-cheia' : ''}`}>
       <header className="cabecalho">
         <div className="cabecalho__marca">
           <img src="/favicon.svg" alt="" width="28" height="28" />
@@ -52,7 +54,7 @@ export default function Layout() {
         </div>
       </header>
 
-      <main className="conteudo">
+      <main className={`conteudo${telaCheia ? ' conteudo--tela-cheia' : ''}`}>
         <Outlet />
       </main>
     </div>

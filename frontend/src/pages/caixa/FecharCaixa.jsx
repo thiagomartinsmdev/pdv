@@ -63,7 +63,7 @@ export default function FecharCaixa({ sessao, aoVoltar, aoFechar }) {
           <button type="button" className="btn btn--secundario" onClick={aoVoltar}>
             Voltar ao caixa
           </button>
-          <button type="submit" className="btn btn--perigo" disabled={enviando}>
+          <button type="submit" className="btn btn--primario" disabled={enviando}>
             {enviando ? 'Fechando...' : 'Confirmar fechamento'}
           </button>
         </div>

@@ -187,7 +187,7 @@ export default function ModalPagamento({ subtotal, aoConfirmar, aoFechar }) {
           <button
             ref={confirmarRef}
             type="button"
-            className="btn btn--sucesso btn--bloco btn--grande"
+            className="btn btn--primario btn--bloco btn--grande"
             onClick={confirmar}
             disabled={!podeConfirmar || enviando}
           >

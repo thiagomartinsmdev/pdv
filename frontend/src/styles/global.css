@@ -90,6 +90,7 @@
   --icone-sucesso: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='m8 12.5 2.7 2.7L16 9.8'/></svg>");
   --icone-check: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='m5 12.5 4.5 4.5L19 7.5'/></svg>");
   --icone-x: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'><path d='M6 6l12 12M18 6 6 18'/></svg>");
+  --icone-leitor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'><path d='M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2'/><path d='M7 8v8M10 8v8M13 8v8M16 8v8'/></svg>");
   --icone-destrutivo: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><circle cx='12' cy='12' r='9'/><path d='m9 9 6 6M15 9l-6 6'/></svg>");
 }
 
@@ -761,6 +762,26 @@ kbd {
   max-width: 1240px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+/* Tela cheia (caixa): a página ocupa exatamente a janela; quem rola é a lista de
+   itens, por dentro. O cabeçalho fica mais fino para sobrar espaço. */
+.layout--tela-cheia {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.layout--tela-cheia .cabecalho {
+  min-height: 48px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.conteudo--tela-cheia {
+  max-width: none;
+  min-height: 0; /* permite que o conteúdo encolha e role por dentro */
+  overflow-y: auto; /* telas de abrir/fechar caixa podem rolar se a janela for baixa */
+  padding: 1rem 1.25rem;
 }
 
 /* ---------- Login ---------- */
