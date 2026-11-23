@@ -15,13 +15,13 @@ ao mesmo tempo) e os valores em dinheiro são sempre exatos.
 - Leitura por código de barras com o campo sempre em foco, quantidade com `5*código` e busca por nome
 - Grade de produtos com foto, abas por categoria e "Mais vendidos" (últimos 30 dias): um toque
   adiciona 1 unidade; letras digitadas no campo de código filtram a grade
-- Atalhos de teclado: **F2** finaliza, **F4** remove o último item, **Esc** cancela a venda
+- Operação toda pelo teclado (veja [Atalhos do caixa](#atalhos-do-caixa))
 - Pagamento em dinheiro, PIX, débito e crédito, inclusive combinados, com troco calculado na hora
 
 **Administração (admin)**
-- Cadastro de produtos com busca, categoria, foto (link com pré-visualização), desativação
-  e reativação
+- Cadastro de produtos com busca, categoria, foto, desativação e reativação
 - Categorias de produto, que viram as abas da grade do caixa, na ordem definida pelo admin
+- Fotos de produto por link ou importadas em lote de uma pasta (veja [Fotos dos produtos](#fotos-dos-produtos))
 - Histórico de vendas com filtro por período e status, produtos de cada venda, detalhes e
   cancelamento
 - Relatórios: total vendido, ticket médio, vendas por dia, formas de pagamento e produtos mais vendidos
@@ -66,7 +66,10 @@ pdv/
 │   │   ├── routers/          endpoints (só recebem, delegam e respondem)
 │   │   └── main.py
 │   ├── alembic/              migrations
-│   ├── scripts/seed.py       dados de exemplo
+│   ├── scripts/
+│   │   ├── seed.py           dados de exemplo
+│   │   └── importar_fotos.py importação de fotos em lote
+│   ├── uploads/              fotos dos produtos (criada sozinha, fora do Git)
 │   └── tests/                testes com pytest
 └── frontend/
     └── src/
@@ -113,9 +116,12 @@ Comandos úteis:
 ```cmd
 docker compose ps                  situação dos containers
 docker compose logs -f backend     logs da API
-docker compose down                para tudo (os dados do banco são mantidos)
-docker compose down -v             para tudo e APAGA os dados do banco
+docker compose down                para tudo (banco e fotos são mantidos)
+docker compose down -v             para tudo e APAGA o banco e as fotos
 ```
+
+Os dados ficam em dois volumes do Docker: `pdv_dados` (banco) e `pdv_uploads` (fotos dos
+produtos). Eles sobrevivem a `docker compose up --build`, que recria os containers.
 
 ### Opção 2: sem Docker
 
@@ -162,9 +168,90 @@ Criados pelo script de seed, junto com 20 produtos de padaria e mercado:
 
 A tela de login tem atalhos para preencher esses usuários.
 
+O seed também cria 6 categorias (Pães, Salgados, Doces, Bebidas, Frios e Mercearia) e liga
+cada produto à sua. Ele pode rodar de novo sem duplicar nada.
+
+## Categorias
+
+Cada categoria ativa vira uma aba na grade do caixa, depois de **Todos** e antes de **Mais
+vendidos**. Na tela **Admin → Categorias**:
+- a **ordem** define a posição da aba (menor primeiro);
+- **desativar** esconde a aba do caixa sem mexer nos produtos, que continuam em **Todos** e
+  na busca;
+- o nome é único, sem diferenciar maiúsculas de minúsculas ("pães" e "Pães" são a mesma).
+
+Produto sem categoria aparece só em **Todos** e na busca.
+
+## Fotos dos produtos
+
+Sem foto, o produto aparece no caixa com a inicial do nome sobre um fundo colorido. Há duas
+formas de dar uma foto a ele.
+
+### Por link
+
+Em **Admin → Produtos → Editar**, cole o link de uma imagem (`https://...`) e confira a
+pré-visualização. Se o link parar de funcionar, o caixa volta a mostrar a inicial.
+
+### Importação em lote de uma pasta
+
+Coloque as fotos numa pasta, cada uma com o **código de barras do produto como nome**:
+
+```
+C:\fotos\
+├── 7891000000014.jpg     Pão francês
+├── 7891000000076.png     Leite integral
+└── 7891000000083.webp    Café torrado
+```
+
+Com o venv ativo, dentro de `backend\`:
+
+```cmd
+python -m scripts.importar_fotos C:\fotos
+```
+
+- Aceita **JPG, PNG e WebP de até 2 MB**. O tipo é conferido pelo conteúdo do arquivo, não
+  pela extensão: um texto renomeado para `.jpg` é recusado.
+- Por padrão, a foto da pasta **substitui** a que o produto já tem, e a foto antiga guardada no
+  servidor é apagada. Para não mexer em quem já tem foto, use `--pular-existentes`.
+- Pode rodar quantas vezes quiser: fotos que não mudaram são puladas, sem duplicar arquivos.
+- No fim, o script mostra um relatório: importadas, já iguais, puladas, códigos sem produto,
+  dois arquivos para o mesmo código, arquivos inválidos e ignorados (outras extensões).
+
+As fotos ficam em `backend\uploads\produtos\` (fora do Git) e são servidas pela API em
+`http://localhost:8000/uploads/produtos/<arquivo>`. Para guardá-las em outra pasta, defina
+`UPLOADS_DIR` no `backend\.env`.
+
+**Com Docker**, copie a pasta para dentro do container e rode o script lá:
+
+```cmd
+docker compose cp C:\fotos backend:/tmp/fotos
+docker compose exec backend python -m scripts.importar_fotos /tmp/fotos
+```
+
+As fotos ficam no volume `pdv_uploads`.
+
+## Atalhos do caixa
+
+O campo de código fica sempre em foco, então o leitor de código de barras funciona a qualquer
+momento, sem clicar em nada.
+
+| Onde | Tecla ou entrada | O que faz |
+|---|---|---|
+| Venda | `código` + **Enter** | Adiciona 1 unidade (é o que o leitor faz ao bipar) |
+| Venda | `5*código` + **Enter** | Adiciona 5 unidades |
+| Venda | letras (ex.: `pao`) | Filtram a grade; **Enter** busca pelo nome |
+| Venda | **F2** | Abre o pagamento |
+| Venda | **F4** | Remove o último item bipado |
+| Venda | **Esc** | Fecha a lista da busca; sem lista, pede para cancelar a venda |
+| Cancelar venda | **Enter** / **Esc** | Confirma o cancelamento / volta para a venda |
+| Pagamento | valor + **Enter** | Lança o pagamento na forma escolhida |
+| Pagamento | **Enter** com o campo vazio | Lança o que falta; com o total coberto, confirma a venda |
+| Pagamento | **F2** | Confirma a venda |
+| Pagamento | **Esc** | Volta para a venda sem registrar nada |
+
 ## Testes
 
-**Backend:** 72 testes com pytest num PostgreSQL de verdade.
+**Backend:** 106 testes com pytest num PostgreSQL de verdade.
 
 Crie um banco vazio `pdv_test` no mesmo servidor do `DATABASE_URL`. Ele é apagado e recriado a
 cada execução. Por segurança, o `conftest.py` se recusa a rodar se o nome do banco não
@@ -181,9 +268,12 @@ Para usar outro banco, defina `TEST_DATABASE_URL` no `backend\.env`.
 Cobertura: venda com sucesso, venda sem estoque (tudo ou nada), troco, pagamento insuficiente,
 PIX acima do total, cancelamento devolvendo estoque, operador tentando cancelar, fechamento de
 caixa, relatórios, filtros por fuso horário, CORS, venda simultânea do último item,
-categorias, mais vendidos, migrations em dia com os models e seed.
+categorias, mais vendidos, envio e validação de fotos (tipo real, tamanho, caminhos fora da
+pasta), importação em lote, migrations em dia com os models e seed.
 
-**Frontend:** 82 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento, as
+Os testes gravam as fotos numa pasta temporária, nunca em `backend\uploads`.
+
+**Frontend:** 89 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento, as
 datas, o resumo de produtos do histórico, as iniciais dos produtos sem foto, os links de imagem
 e a grade de produtos do caixa.
 
@@ -209,6 +299,8 @@ faça `POST /auth/login`, copie o `access_token` e cole no botão **Authorize**.
 | GET | `/produtos/mais-vendidos` | logado | Mais vendidos dos últimos `dias` (padrão: 30) |
 | GET | `/produtos/codigo/{codigo}` | logado | Busca pelo código de barras (leitor do caixa) |
 | POST / PATCH / DELETE | `/produtos` | admin | Cadastro, edição e desativação |
+| POST / DELETE | `/produtos/{id}/imagem` | admin | Envia (JPG, PNG ou WebP até 2 MB) ou remove a foto |
+| GET | `/uploads/produtos/{arquivo}` | público | Arquivo da foto |
 | POST | `/caixa/abrir` | logado | Abre o caixa do usuário |
 | GET | `/caixa/atual` | logado | Caixa aberto com resumo parcial (ou `null`) |
 | POST | `/caixa/fechar` | logado | Fecha e calcula o esperado e a diferença |
@@ -256,6 +348,18 @@ Além da validação no código, o banco tem a última palavra:
 - um **índice único parcial** (`WHERE fechado_em IS NULL`), que garante um único caixa aberto
   por usuário mesmo com duas aberturas simultâneas.
 
+### Fotos guardadas com segurança
+Um arquivo enviado é tratado como não confiável:
+- o **tipo é conferido pelos primeiros bytes** (a "assinatura" de JPG, PNG e WebP), e não pela
+  extensão ou pelo tipo informado por quem enviou;
+- a leitura **para ao passar de 2 MB**, sem carregar um arquivo gigante na memória;
+- o arquivo é salvo com um **nome gerado pelo servidor** e a extensão do tipo real. O nome
+  original nunca é usado, o que impede truques como `../../app/main.py`;
+- só a pasta `uploads/produtos` é publicada, com o cabeçalho `X-Content-Type-Options: nosniff`
+  (o navegador não tenta "adivinhar" que o arquivo é outra coisa);
+- a foto antiga só é apagada **depois** que o banco confirma a troca, e só se nenhum outro
+  produto usar o mesmo arquivo (a importação em lote reaproveita fotos iguais).
+
 ### Outras decisões
 - **Exclusão lógica:** produtos e usuários são desativados, não apagados, para preservar o
   histórico de vendas.
@@ -283,5 +387,8 @@ Além da validação no código, o banco tem a última palavra:
 - **Venda só por unidade:** a quantidade é inteira. Produtos vendidos por peso (pão por kg)
   precisariam de quantidade decimal.
 - **Sem tela de usuários no frontend:** a gestão de usuários existe só na API.
+- **Envio de foto só pela API ou pelo script:** a rota de upload existe e está testada, mas a
+  tela de produtos aceita apenas link. As fotos ficam no disco do servidor; em produção, o
+  natural seria um armazenamento de arquivos (como S3).
 - **Ideias futuras:** emissão de cupom, integração com balança e TEF, e testes de interface
   ponta a ponta (Playwright).
