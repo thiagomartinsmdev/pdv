@@ -350,3 +350,57 @@ def test_filtro_por_periodo(client, db, auth_admin, admin, abrir_caixa, criar_pr
         "/vendas", params={"inicio": "2026-11-06", "fim": "2026-11-05"}, headers=auth_admin
     )
     assert resposta.status_code == 422
+
+
+# ---------- Listagem: produtos de cada venda, sem N+1 ----------
+
+
+def test_listagem_traz_os_produtos_de_cada_venda(
+    client, auth_operador, caixa_operador, criar_produto
+):
+    pao = criar_produto("Pão francês", preco="0.90", estoque=100)
+    leite = criar_produto("Leite integral", preco="5.29", estoque=100)
+    client.post(
+        "/vendas",
+        json=venda([(pao.id, 3), (leite.id, 1)], [("pix", "7.99")]),
+        headers=auth_operador,
+    )
+
+    [listada] = client.get("/vendas", headers=auth_operador).json()
+
+    produtos = sorted((i["produto"]["nome"], i["quantidade"]) for i in listada["itens"])
+    assert produtos == [("Leite integral", 1), ("Pão francês", 3)]
+
+
+def test_listagem_nao_faz_uma_consulta_por_venda(
+    client, engine, auth_operador, caixa_operador, criar_produto
+):
+    """O número de consultas ao banco não pode crescer com a quantidade de vendas (N+1)."""
+    from sqlalchemy import event
+
+    produtos = [criar_produto(f"Produto {i}", estoque=100) for i in range(4)]
+
+    def vender(produto) -> None:
+        corpo = venda([(produto.id, 1)], [("pix", "10.00")])
+        assert client.post("/vendas", json=corpo, headers=auth_operador).status_code == 201
+
+    def consultas_da_listagem() -> int:
+        contador = {"total": 0}
+
+        def contar(*_args) -> None:
+            contador["total"] += 1
+
+        event.listen(engine, "before_cursor_execute", contar)
+        try:
+            assert client.get("/vendas", headers=auth_operador).status_code == 200
+        finally:
+            event.remove(engine, "before_cursor_execute", contar)
+        return contador["total"]
+
+    vender(produtos[0])
+    com_uma_venda = consultas_da_listagem()
+    for produto in produtos:
+        vender(produto)
+    com_cinco_vendas = consultas_da_listagem()
+
+    assert com_cinco_vendas == com_uma_venda

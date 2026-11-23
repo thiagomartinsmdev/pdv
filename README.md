@@ -18,7 +18,8 @@ ao mesmo tempo) e os valores em dinheiro são sempre exatos.
 
 **Administração (admin)**
 - Cadastro de produtos com busca, desativação e reativação
-- Histórico de vendas com filtro por período e status, detalhes e cancelamento
+- Histórico de vendas com filtro por período e status, produtos de cada venda, detalhes e
+  cancelamento
 - Relatórios: total vendido, ticket médio, vendas por dia, formas de pagamento e produtos mais vendidos
 
 **Segurança**
@@ -159,7 +160,7 @@ A tela de login tem atalhos para preencher esses usuários.
 
 ## Testes
 
-**Backend:** 47 testes com pytest num PostgreSQL de verdade.
+**Backend:** 49 testes com pytest num PostgreSQL de verdade.
 
 Crie um banco vazio `pdv_test` no mesmo servidor do `DATABASE_URL`. Ele é apagado e recriado a
 cada execução. Por segurança, o `conftest.py` se recusa a rodar se o nome do banco não
@@ -177,7 +178,8 @@ Cobertura: venda com sucesso, venda sem estoque (tudo ou nada), troco, pagamento
 PIX acima do total, cancelamento devolvendo estoque, operador tentando cancelar, fechamento de
 caixa, relatórios, filtros por fuso horário, CORS e venda simultânea do último item.
 
-**Frontend:** 42 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento e as datas.
+**Frontend:** 46 testes com Vitest para as contas em dinheiro, o carrinho, o pagamento, as
+datas e o resumo de produtos do histórico.
 
 ```cmd
 cd frontend

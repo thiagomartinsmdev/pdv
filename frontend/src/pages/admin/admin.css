@@ -411,3 +411,11 @@
     font-size: 1.4rem;
   }
 }
+
+/* Coluna "Produtos" do histórico: uma linha só; o texto completo fica no title. */
+.celula-produtos {
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

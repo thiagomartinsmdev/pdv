@@ -8,6 +8,7 @@ import { formatarReais, paraCentavos } from '../../utils/dinheiro.js'
 import { periodoDoPreset } from '../../utils/periodos.js'
 import { rotuloDaForma } from '../caixa/pagamento.js'
 import ModalDetalheVenda from './ModalDetalheVenda.jsx'
+import { resumirProdutos } from './resumoProdutos.js'
 import './admin.css'
 
 const POR_PAGINA = 50
@@ -72,6 +73,7 @@ export default function Vendas() {
                 <th>Nº</th>
                 <th>Data e hora</th>
                 <th>Operador</th>
+                <th>Produtos</th>
                 <th className="col-numero">Itens</th>
                 <th>Pagamento</th>
                 <th className="col-numero">Total</th>
@@ -93,6 +95,7 @@ export default function Vendas() {
                   </td>
                   <td>{formatarDataHora(venda.data_hora)}</td>
                   <td>{venda.usuario.nome}</td>
+                  <CelulaProdutos itens={venda.itens} />
                   <td className="col-numero">
                     {venda.itens.reduce((soma, item) => soma + item.quantidade, 0)}
                   </td>
@@ -140,5 +143,15 @@ export default function Vendas() {
         />
       )}
     </section>
+  )
+}
+
+/** "Pão francês ×3, Leite integral ×1 +2 itens"; a lista completa fica no tooltip. */
+function CelulaProdutos({ itens }) {
+  const { texto, completo } = resumirProdutos(itens)
+  return (
+    <td className="celula-produtos" title={completo}>
+      {texto}
+    </td>
   )
 }
