@@ -202,6 +202,9 @@ Produto sem categoria aparece só em **Todos** e na busca.
 Sem foto, o produto aparece no caixa com a inicial do nome sobre um fundo colorido. Há duas
 formas de dar uma foto a ele.
 
+> As imagens dos produtos são ilustrativas, pertencem aos respectivos fabricantes e foram usadas
+> apenas para demonstração, sem fins comerciais.
+
 ### Por link
 
 Em **Admin → Produtos → Editar**, cole o link de uma imagem (`https://...`) e confira a
