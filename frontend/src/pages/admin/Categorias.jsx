@@ -45,7 +45,7 @@ export default function Categorias() {
   return (
     <section>
       <div className="pagina-cabecalho">
-        <div>
+        <div className="pagina-cabecalho__textos">
           <h1 className="titulo-pagina">Categorias</h1>
           <p className="texto-suave subtitulo-pagina">
             Cada categoria ativa vira uma aba na grade de produtos do caixa.

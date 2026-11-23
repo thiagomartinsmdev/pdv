@@ -13,6 +13,18 @@
   margin-bottom: 0;
 }
 
+/* Título e subtítulo empilhados; o botão de ação fica à direita do bloco. */
+.pagina-cabecalho__textos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.subtitulo-pagina {
+  margin: 0;
+}
+
 /* ---------- Filtros (uma linha acima do conteúdo) ---------- */
 
 .barra-filtros {
@@ -430,10 +442,6 @@
 
 .tabela .col-ordem {
   width: 6rem;
-}
-
-.subtitulo-pagina {
-  margin-top: -1rem;
 }
 
 /* ---------- Modal de produto: link da imagem + pré-visualização ---------- */
