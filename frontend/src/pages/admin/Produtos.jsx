@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { atualizarProduto, desativarProduto, listarProdutos } from '../../api/produtos.js'
+import ImagemProduto from '../../components/ImagemProduto.jsx'
 import Modal from '../../components/Modal.jsx'
 import { useAtraso } from '../../hooks/useAtraso.js'
 import { useConsulta } from '../../hooks/useConsulta.js'
@@ -104,6 +105,7 @@ export default function Produtos() {
               <tr>
                 <th>Produto</th>
                 <th>Código de barras</th>
+                <th>Categoria</th>
                 <th className="col-numero">Preço</th>
                 <th className="col-numero">Estoque</th>
                 <th>Situação</th>
@@ -115,8 +117,20 @@ export default function Produtos() {
             <tbody>
               {produtos.map((produto) => (
                 <tr key={produto.id} className={produto.ativo ? '' : 'linha--inativa'}>
-                  <td className="celula-destaque">{produto.nome}</td>
+                  <td>
+                    <div className="celula-produto">
+                      <ImagemProduto nome={produto.nome} url={produto.imagem_url} tamanho={40} />
+                      <span className="celula-destaque">{produto.nome}</span>
+                    </div>
+                  </td>
                   <td className="celula-codigo">{produto.codigo_barras}</td>
+                  <td>
+                    {produto.categoria ? (
+                      produto.categoria.nome
+                    ) : (
+                      <span className="texto-suave">Sem categoria</span>
+                    )}
+                  </td>
                   <td className="col-numero">{formatarReais(paraCentavos(produto.preco))}</td>
                   <td className="col-numero">
                     {produto.quantidade_estoque}
@@ -140,13 +154,17 @@ export default function Produtos() {
                     {produto.ativo ? (
                       <button
                         type="button"
-                        className="btn btn--fantasma texto-perigo"
+                        className="btn btn--perigo"
                         onClick={() => setModal({ tipo: 'desativar', produto })}
                       >
                         Desativar
                       </button>
                     ) : (
-                      <button type="button" className="btn btn--fantasma" onClick={() => reativar(produto)}>
+                      <button
+                        type="button"
+                        className="btn btn--secundario"
+                        onClick={() => reativar(produto)}
+                      >
                         Reativar
                       </button>
                     )}

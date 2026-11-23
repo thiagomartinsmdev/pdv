@@ -6,6 +6,7 @@ import { useAuth } from '../hooks/useAuth.js'
 const LINKS = [
   { para: '/caixa', texto: 'Caixa', perfis: ['admin', 'operador'] },
   { para: '/admin/produtos', texto: 'Produtos', perfis: ['admin'] },
+  { para: '/admin/categorias', texto: 'Categorias', perfis: ['admin'] },
   { para: '/admin/vendas', texto: 'Vendas', perfis: ['admin'] },
   { para: '/admin/relatorios', texto: 'Relatórios', perfis: ['admin'] },
 ]

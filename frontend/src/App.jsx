@@ -14,6 +14,7 @@ import { rotaInicial } from './utils/rotas.js'
 // incluindo a biblioteca de gráficos, só é baixado quando um admin abre uma delas.
 // Assim o operador de caixa não paga por um código que nunca vai usar.
 const Produtos = lazy(() => import('./pages/admin/Produtos.jsx'))
+const Categorias = lazy(() => import('./pages/admin/Categorias.jsx'))
 const Vendas = lazy(() => import('./pages/admin/Vendas.jsx'))
 const Relatorios = lazy(() => import('./pages/admin/Relatorios.jsx'))
 
@@ -25,7 +26,7 @@ const Relatorios = lazy(() => import('./pages/admin/Relatorios.jsx'))
  *     └─ Layout (cabeçalho + menu)
  *          ├─ /caixa                   qualquer perfil
  *          └─ RotaProtegida (só admin)
- *               └─ /admin/produtos, /admin/vendas, /admin/relatorios
+ *               └─ /admin/produtos, /admin/categorias, /admin/vendas, /admin/relatorios
  */
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="admin" element={<RotaProtegida perfis={['admin']} />}>
             <Route index element={<Navigate to="relatorios" replace />} />
             <Route path="produtos" element={<SobDemanda pagina={Produtos} />} />
+            <Route path="categorias" element={<SobDemanda pagina={Categorias} />} />
             <Route path="vendas" element={<SobDemanda pagina={Vendas} />} />
             <Route path="relatorios" element={<SobDemanda pagina={Relatorios} />} />
           </Route>
