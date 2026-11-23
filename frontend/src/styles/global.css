@@ -206,9 +206,59 @@ select {
   color: var(--cor-primaria);
 }
 
-.badge--operador {
+.badge--operador,
+.badge--sucesso {
   background: var(--cor-sucesso-clara);
   color: var(--cor-sucesso);
+}
+
+.badge--perigo {
+  background: var(--cor-perigo-clara);
+  color: var(--cor-perigo);
+}
+
+.badge--aviso {
+  margin-left: 0.4rem;
+  background: var(--cor-aviso-clara);
+  color: var(--cor-aviso);
+}
+
+.badge--neutro {
+  background: var(--cor-fundo);
+  color: var(--cor-texto-suave);
+}
+
+.alerta--sucesso {
+  background: var(--cor-sucesso-clara);
+  border-color: #bfe5cb;
+  color: var(--cor-sucesso);
+}
+
+.alerta--fechavel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+.texto-pequeno {
+  font-size: 0.85rem;
+}
+
+.subtitulo {
+  font-size: 1.05rem;
+}
+
+.espaco-abaixo {
+  margin-bottom: 1rem;
+}
+
+.formulario__linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 /* ---------- Carregando ---------- */

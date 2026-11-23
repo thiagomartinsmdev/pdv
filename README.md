@@ -72,6 +72,17 @@ O campo de código fica sempre com o foco, para funcionar com leitor de código 
 | **F4**            | Remove o último item                                  |
 | **Esc**           | Cancela a venda em andamento (pede confirmação)       |
 
+## Área administrativa
+
+- **Produtos:** cadastro, edição, busca, desativação e reativação; destaque para estoque baixo.
+- **Vendas:** histórico com filtro por período e status, detalhes de cada venda e cancelamento
+  (devolve os itens ao estoque; bloqueado para vendas de caixa já fechado).
+- **Relatórios:** total vendido, quantidade de vendas, ticket médio, canceladas, gráfico de
+  vendas por dia (com visão em tabela), recebido por forma de pagamento e produtos mais vendidos.
+
+As telas de admin são carregadas sob demanda (`React.lazy`): o operador de caixa não baixa o
+código delas nem a biblioteca de gráficos.
+
 No pagamento é possível combinar formas (ex.: parte no crédito, parte em dinheiro); o troco
 é calculado na hora e só existe em dinheiro. O fechamento do caixa é feito "às cegas": o
 operador informa o dinheiro contado antes de ver o valor esperado pelo sistema.

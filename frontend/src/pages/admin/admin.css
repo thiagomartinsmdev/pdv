@@ -1,0 +1,413 @@
+/* Estilos da área administrativa: produtos, vendas e relatórios. */
+
+.pagina-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.pagina-cabecalho .titulo-pagina {
+  margin-bottom: 0;
+}
+
+/* ---------- Filtros (uma linha acima do conteúdo) ---------- */
+
+.barra-filtros {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.campo-busca {
+  flex: 1;
+  min-width: 220px;
+  max-width: 420px;
+  min-height: 40px;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-superficie);
+}
+
+.caixa-selecao {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.campo-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.campo-inline select,
+.filtro-periodo input[type='date'] {
+  min-height: 36px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-superficie);
+  font-weight: 400;
+}
+
+.filtro-periodo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filtro-periodo__presets,
+.filtro-periodo__datas {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  min-height: 36px;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  background: var(--cor-superficie);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.chip:hover {
+  background: var(--cor-fundo);
+}
+
+.chip--ativo,
+.chip--ativo:hover {
+  border-color: var(--cor-primaria);
+  background: var(--cor-primaria-clara);
+  color: var(--cor-primaria);
+}
+
+/* ---------- Tabelas da área admin ---------- */
+
+.cartao--tabela {
+  padding: 0;
+  overflow-x: auto;
+}
+
+/* Enquanto recarrega, mantém os dados anteriores esmaecidos (sem piscar a tela). */
+.atualizando {
+  opacity: 0.55;
+  transition: opacity 0.15s;
+}
+
+.tabela-vazia {
+  margin: 0;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--cor-texto-suave);
+}
+
+.tabela .col-numero {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabela .col-acoes-texto {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tabela .col-acoes-texto .btn {
+  min-height: 32px;
+  padding: 0.25rem 0.6rem;
+}
+
+.celula-destaque {
+  font-weight: 600;
+}
+
+.celula-codigo {
+  font-family: var(--fonte-numeros);
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.linha--inativa td {
+  color: var(--cor-texto-suave);
+}
+
+.tabela--clicavel tbody tr {
+  cursor: pointer;
+}
+
+.tabela--clicavel tbody tr:hover td {
+  background: var(--cor-fundo);
+}
+
+.link-botao {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cor-primaria);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.texto-perigo {
+  color: var(--cor-perigo);
+}
+
+.paginacao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.tabela-rolavel {
+  overflow-x: auto;
+}
+
+.tabela-rolavel--limitada {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* ---------- Detalhe da venda ---------- */
+
+.detalhe-venda__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--cor-texto-suave);
+}
+
+.detalhe-venda__rodape {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+.lista-simples {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.lista-simples li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.detalhe-venda__acoes {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cor-borda);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.confirmacao {
+  width: 100%;
+  padding: 1rem;
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-perigo-clara);
+}
+
+.confirmacao p {
+  margin: 0;
+}
+
+/* ---------- Relatórios ---------- */
+
+.relatorio {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.relatorio__colunas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.indicadores {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.indicador {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  padding: 1.25rem;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+
+.indicador__rotulo {
+  font-size: 0.9rem;
+  color: var(--cor-texto-suave);
+}
+
+.indicador__valor {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+/* O número principal da página: grande e na mesma fonte do resto. */
+.indicador--principal .indicador__valor {
+  font-size: 3rem;
+}
+
+.grafico__cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.grafico__area {
+  width: 100%;
+  min-width: 0;
+}
+
+.grafico__tooltip {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.75rem;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  box-shadow: var(--sombra);
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.grafico__tooltip strong {
+  font-size: 1rem;
+  color: var(--cor-texto);
+}
+
+/* Barras horizontais ranqueadas: nome | barra | valor */
+.barras-ranqueadas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.barras-ranqueadas li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.barras-ranqueadas__nome {
+  font-weight: 600;
+}
+
+.barras-ranqueadas__trilho {
+  height: 12px;
+  border-radius: 0 4px 4px 0;
+  background: var(--cor-fundo);
+}
+
+.barras-ranqueadas__barra {
+  display: block;
+  height: 100%;
+  background: #2a78d6;
+  border-radius: 0 4px 4px 0; /* ponta arredondada, base reta */
+}
+
+.barras-ranqueadas__valor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.barras-ranqueadas__valor small {
+  color: var(--cor-texto-suave);
+  font-weight: 400;
+}
+
+.tabela--ranking .col-posicao {
+  width: 2.5rem;
+  color: var(--cor-texto-suave);
+}
+
+.barra-fina {
+  display: block;
+  height: 4px;
+  margin-top: 0.35rem;
+  border-radius: 999px;
+  background: #cde2fb;
+}
+
+.barra-fina span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #2a78d6;
+}
+
+/* ---------- Telas menores ---------- */
+
+@media (max-width: 960px) {
+  .indicadores {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .indicador--principal {
+    grid-column: 1 / -1;
+  }
+
+  .relatorio__colunas,
+  .detalhe-venda__rodape {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .indicadores {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .indicador--principal .indicador__valor {
+    font-size: 2.25rem;
+  }
+
+  .indicador__valor {
+    font-size: 1.4rem;
+  }
+}
